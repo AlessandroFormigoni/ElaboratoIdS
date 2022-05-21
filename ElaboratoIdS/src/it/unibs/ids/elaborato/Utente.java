@@ -12,5 +12,13 @@ public abstract class Utente {
 	public String userSecrets() {
 		return this.nome + " " + this.password;
 	}
+	
+	public String getName() {
+		return this.nome;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
 
 }

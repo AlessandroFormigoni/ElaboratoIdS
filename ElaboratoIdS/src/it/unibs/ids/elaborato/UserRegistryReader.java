@@ -73,7 +73,7 @@ public class UserRegistryReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static ArrayList<Utente> getReadUserReg() throws IOException {
+	public static ArrayList<Utente> getReadUserReg() {
 		initializeReader();
 		extractUsers();
 		return utenti;
