@@ -10,7 +10,7 @@ import java.util.*;
  */
 
 
-public class Categoria {
+public class Categoria implements Comparable<Categoria> {
 	
 	 public static final String NOME_STATO_DI_CONSERVAZIONE = "Stato di Conservazione";
 	 public static final String NOME_DESCRIZIONE_LIBERA = "Descrizione libera";
@@ -55,6 +55,7 @@ public class Categoria {
 		return null;
 	}
 	
+	//case sensitive
 	public Campo trovaCampoPerNome(String nomeCampoDaTrovare) {
 		for(Campo c : campi) {
 			if(c.getNome().equals(nomeCampoDaTrovare)) return c;
@@ -102,18 +103,31 @@ public class Categoria {
 		if(trovaCampo(daRimuovere)!=null && daRimuovere.isModificabile()) campi.remove(daRimuovere);
 	}
 	
-	public boolean equals(Categoria daParagonare){
+	/*public boolean equals(Categoria daParagonare){
 		boolean stesso;
 		if(this.nomeCategoria.equals(daParagonare.nomeCategoria)&&this.descrizioneLibera.equals(daParagonare.descrizioneLibera)) stesso=true;
 		else stesso=false;
 		
 		return stesso;
+	}*/
+	
+	public int compareTo(Categoria daComparare) {
+		
+		if(this.nomeCategoria.compareTo(daComparare.nomeCategoria)>=0) return 1;
+		else if(this.nomeCategoria.compareTo(daComparare.nomeCategoria)<=0) return -1;
+		else if(this.nomeCategoria.compareTo(daComparare.nomeCategoria)==0) return 0;
+		else return 999;
 	}
 	
 	public boolean aggiungiSottoCategoria(Categoria daAggiungere) {
 		if(!daAggiungere.root && sottoCategorie.add(daAggiungere)) return true;
 		else return false;
 		
+	}
+	
+	public boolean hasSottoCategorie(){
+		if(!this.sottoCategorie.isEmpty()) return true;
+		else return false;
 	}
 
 }
