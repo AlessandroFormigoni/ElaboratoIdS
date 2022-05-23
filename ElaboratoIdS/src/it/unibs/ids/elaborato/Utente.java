@@ -3,6 +3,8 @@ package it.unibs.ids.elaborato;
 public abstract class Utente {
 	public String nome;
 	public String password;
+	public boolean isFirstAccess;
+	public boolean isAuthorized;
 	
 	public Utente(String nome, String password) {
 		this.nome = nome;
@@ -21,4 +23,6 @@ public abstract class Utente {
 		return this.password;
 	}
 
+	protected abstract void cambiaCredenziali();
+	
 }

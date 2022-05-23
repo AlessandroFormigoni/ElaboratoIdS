@@ -6,6 +6,7 @@ import it.unibs.fp.mylib.InputDati;
 
 public class Controller {
 	
+	private static final int PASSWD_TRIAL_NUM = 3;
 	private static final String GENERIC_PASSWORD_ERROR = "Inserimento password fallito";
 	private static final String INSERT_PASSWORD = "Inserisci password: ";
 	private static final String GENERIC_LOGIN_ERROR = "Errore di login";
@@ -18,12 +19,16 @@ public class Controller {
 		this.loggedUsers = new ArrayList<>();
 	}
 	
+	
 	public Utente userLogin(String nome) {
 		try {
 		Utente user = getUser(nome);
-		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user)) {
+		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user) && user.isAuthorized) {
 			System.out.println(LOGIN_SUCCESS);
 			loggedUsers.add(user);
+			if(user.isFirstAccess) {
+				firstConfigLogin((Configuratore) user);
+			}
 			return user;
 		}
 		} catch(Exception e) {
@@ -32,10 +37,14 @@ public class Controller {
 		return null;
 	}
 	
+	private void firstConfigLogin(Configuratore conf) {
+		conf.cambiaCredenziali();
+	}
+	
 	private boolean loginAuthentication(Utente requestingUser) {
 		boolean isAuthenticated = false;
 		
-		for(int chances = 3; chances>0 && isAuthenticated==false; chances--)
+		for(int chances = PASSWD_TRIAL_NUM; chances>0 && isAuthenticated==false; chances--)
 				isAuthenticated = checkPassword(requestingUser, InputDati.leggiStringa(INSERT_PASSWORD));
 		
 		if(isAuthenticated==false) System.out.println(GENERIC_PASSWORD_ERROR);
@@ -43,7 +52,7 @@ public class Controller {
 		return isAuthenticated;
 	}
 	
-	private void userLogout(Utente utente) {
+	public void userLogout(Utente utente) {
 		loggedUsers.remove(utente);
 	}
 	
@@ -60,6 +69,10 @@ public class Controller {
 	
 	public void importUsers(List<Utente> listaUtenti) {
 		this.listaUtenti = listaUtenti;
+	}
+	
+	public boolean hasUser(String nome) {
+		return listaUtenti.contains(getUser(nome));
 	}
 
 }

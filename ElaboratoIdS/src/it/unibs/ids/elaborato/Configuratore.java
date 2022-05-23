@@ -1,24 +1,28 @@
 package it.unibs.ids.elaborato;
 
+import it.unibs.fp.mylib.InputDati;
+
 public class Configuratore extends Utente {
 	
-	public boolean isFirstAccess;
 	
 	public Configuratore(String nome, String password) {
 		super(nome, password);
-		this.isFirstAccess = false;
+		this.isFirstAccess = true;
+		this.isAuthorized = true;
 	}
 	
-	public void creaCategoria() {
+	public Categoria creaCategoria() {
 		
 	}
 	
-	public void modificaCategoria() {
+	public Categoria modificaCategoria() {
 		
 	}
 	
 	public void cambiaCredenziali() {
-		
+		this.nome = InputDati.leggiStringaNonVuota("Inserisci il tuo nuovo nickname: ");
+		this.password = InputDati.leggiStringaNonVuota("Inserisci la tua nuova password: ");
+		this.isFirstAccess = false;
 	}
 
 }
