@@ -12,8 +12,8 @@ public class Campo {
 	boolean mandatory;
 	
 	
-	Campo(String nome, String descrizione, boolean modificabile, boolean mandatory){
-		this.nome = nome;
+	Campo(String nomeCampo, String descrizione, boolean modificabile, boolean mandatory){
+		this.nome = nomeCampo;
 		this.descrizione = descrizione;
 		this.modificabile = modificabile;
 		this.mandatory = mandatory;
@@ -28,12 +28,20 @@ public class Campo {
 		return modificabile;
 	}
 	
-	public void modificaNome(String nome) {
-		if(isModificabile()) this.nome = nome;
+	public String getNome() {
+		return nome;
 	}
 	
-	public void modificaDescrizione(String descrizione){
-		 this.descrizione = descrizione;
+	public String getDescrizione() {
+		return descrizione;
+	}
+	
+	public void modificaNome(String nuovoNome) {
+		if(isModificabile()) this.nome = nuovoNome;
+	}
+	
+	public void modificaDescrizione(String nuovaDescrizione){
+		 this.descrizione = nuovaDescrizione;
 	}
 	
 	public void modificaMandatory(boolean mandatory) {
