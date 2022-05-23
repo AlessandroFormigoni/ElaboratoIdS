@@ -12,11 +12,11 @@ public class Configuratore extends Utente {
 	}
 	
 	public Categoria creaCategoria() {
-		
+		return null;
 	}
 	
 	public Categoria modificaCategoria() {
-		
+		return null;
 	}
 	
 	public void cambiaCredenziali() {

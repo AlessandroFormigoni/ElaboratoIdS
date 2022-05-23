@@ -1,8 +1,8 @@
 package it.unibs.ids.elaborato;
 
 import java.io.File;
+
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 
 import javax.xml.stream.XMLInputFactory;
@@ -14,7 +14,7 @@ import it.unibs.fp.mylib.InputDati;
 
 public class UserRegistryReader {
 
-	static String filename = "../ElaboratoIdS/Data/UserRegistry.xml";
+	static String filename = "../Data/UserRegistry.xml";
 	static String absolutePath = new File(filename).getAbsolutePath();
 	static String baseDirectory = "/ElaboratoIdS/Data";
 	static XMLStreamReader xmlr = null;
