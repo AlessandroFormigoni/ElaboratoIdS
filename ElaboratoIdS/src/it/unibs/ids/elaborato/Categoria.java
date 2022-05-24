@@ -66,9 +66,9 @@ public class Categoria implements Comparable<Categoria> {
 	public void modificaCampo(Campo daModificare, String nuovoNomeCampo, String nuovaDescrizione, boolean nuovoMandatory) {
 		
 		if(trovaCampo(daModificare)!=null) {
-			trovaCampo(daModificare).modificaNome(nuovoNomeCampo);
-			trovaCampo(daModificare).modificaDescrizione(nuovaDescrizione);
-			trovaCampo(daModificare).modificaMandatory(nuovoMandatory);
+			trovaCampo(daModificare).setNome(nuovoNomeCampo);
+			trovaCampo(daModificare).setDescrizione(nuovaDescrizione);
+			trovaCampo(daModificare).setMandatory(nuovoMandatory);
 		}
 	}
 	
@@ -76,26 +76,26 @@ public class Categoria implements Comparable<Categoria> {
 	public void modificaNomeCampo(Campo daModificare, String nuovoNomeCampo) {
 			
 			if(trovaCampo(daModificare)!=null) {
-				trovaCampo(daModificare).modificaNome(nuovoNomeCampo);
+				trovaCampo(daModificare).setNome(nuovoNomeCampo);
 			}
 		}
 	
 	public void modificaDescrizioneCampo(Campo daModificare, String nuovaDescrizione) {
 		if(trovaCampo(daModificare)!=null) {
-			trovaCampo(daModificare).modificaNome(nuovaDescrizione);
+			trovaCampo(daModificare).setNome(nuovaDescrizione);
 		}
 	}
 	
 	public void modificaDescrizioneCampo(String nomeCampoDaModificare, String nuovaDescrizione) {
 		if(trovaCampoPerNome(nomeCampoDaModificare)!=null) {
-			trovaCampoPerNome(nomeCampoDaModificare).modificaDescrizione(nuovaDescrizione);
+			trovaCampoPerNome(nomeCampoDaModificare).setDescrizione(nuovaDescrizione);
 		}
 	}
 	
 	public void modificaCampo(Campo daModificare, boolean nuovoMandatory) {
 			
 			if(trovaCampo(daModificare)!=null) {
-				trovaCampo(daModificare).modificaMandatory(nuovoMandatory);
+				trovaCampo(daModificare).setMandatory(nuovoMandatory);
 			}
 		}
 	

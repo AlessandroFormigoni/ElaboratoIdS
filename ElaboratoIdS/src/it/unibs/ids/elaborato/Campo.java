@@ -36,15 +36,15 @@ public class Campo {
 		return descrizione;
 	}
 	
-	public void modificaNome(String nuovoNome) {
+	public void setNome(String nuovoNome) {
 		if(isModificabile()) this.nome = nuovoNome;
 	}
 	
-	public void modificaDescrizione(String nuovaDescrizione){
+	public void setDescrizione(String nuovaDescrizione){
 		 this.descrizione = nuovaDescrizione;
 	}
 	
-	public void modificaMandatory(boolean mandatory) {
+	public void setMandatory(boolean mandatory) {
 		if(isModificabile()) this.mandatory = mandatory;
 	}
 	
