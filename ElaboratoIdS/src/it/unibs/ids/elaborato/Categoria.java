@@ -19,29 +19,69 @@ public class Categoria implements Comparable<Categoria> {
 	 public static final boolean MANDATORY = true;
 	 
 	
-	String nomeCategoria;
-	boolean root;
-	Campo statoDiConservazione;
-	Campo descrizioneLibera;
+	private String nomeCategoria;
+	private String descrizioneCategoria;
+	private boolean root;
+	private Campo statoDiConservazione;
+	private Campo descrizioneLibera;
+	private Categoria genitore;
 	TreeSet<Categoria> sottoCategorie;
 	HashSet<Campo> campi;
 	
-	Categoria(String nomeCategoria, boolean root){
+	/*
+	 * costruttore per categoria root
+	 * */
+	Categoria(String nomeCategoria, String descrizioneCategoria){
 		this.nomeCategoria = nomeCategoria;
+		this.descrizioneCategoria=descrizioneCategoria;
+		this.root=true;
 		sottoCategorie = new TreeSet<>();
 		campi = new HashSet<>();
-		if(root) {
-			statoDiConservazione = new Campo(NOME_STATO_DI_CONSERVAZIONE, DESCRIZIONE_DEAFAULT, !MODIFICABILE, MANDATORY);
-			descrizioneLibera = new Campo(NOME_DESCRIZIONE_LIBERA, DESCRIZIONE_DEAFAULT ,!MODIFICABILE, MANDATORY);
-			campi.add(descrizioneLibera);
-			campi.add(statoDiConservazione);
-		}
+		statoDiConservazione = new Campo(NOME_STATO_DI_CONSERVAZIONE, DESCRIZIONE_DEAFAULT, !MODIFICABILE, MANDATORY);
+		descrizioneLibera = new Campo(NOME_DESCRIZIONE_LIBERA, DESCRIZIONE_DEAFAULT ,!MODIFICABILE, MANDATORY);
+		campi.add(descrizioneLibera);
+		campi.add(statoDiConservazione);
 		
+	}
+	
+	/*
+	 * costruttore per categoria non root.
+	 * va specificato il genitore a differnza della categoria root.
+	 * */
+	Categoria(String nomeCategoria, String descrizioneCategoria, Categoria genitore){
+		this.nomeCategoria = nomeCategoria;
+		this.descrizioneCategoria=descrizioneCategoria;
+		this.root=false;
+		this.genitore=genitore;
+		sottoCategorie = new TreeSet<>();
+		campi = new HashSet<>();
 	}
 	
 	public boolean isRoot() {
 		return root;
 	}
+	
+	public void setNomeCategoria(String nomeCategoria) {
+		this.nomeCategoria = nomeCategoria;
+	}
+	
+	public String getNomeCategoria() {
+		return nomeCategoria;
+	}
+	
+	public String getDescrizioneCategoria() {
+		return descrizioneCategoria;
+	}
+
+	public void setDescrizioneCategoria(String descrizioneCategoria) {
+		this.descrizioneCategoria = descrizioneCategoria;
+	}
+	
+	public Categoria getGenitore() {
+		if(!this.isRoot())return genitore;
+		else throw new NoSuchElementException("Una Categoria root non ha genitore");
+	}
+	
 	
 	public void aggiungiCampo(Campo campo){
 		 campi.add(campo);
@@ -128,6 +168,11 @@ public class Categoria implements Comparable<Categoria> {
 	public boolean hasSottoCategorie(){
 		if(!this.sottoCategorie.isEmpty()) return true;
 		else return false;
+	}
+
+	//solo per test
+	public String toString(){
+		return this.getNomeCategoria();
 	}
 
 }

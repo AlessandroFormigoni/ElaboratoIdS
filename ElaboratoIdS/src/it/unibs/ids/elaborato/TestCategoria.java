@@ -6,63 +6,51 @@ public class TestCategoria {
 		
 		
 		
-		Categoria libro = new Categoria("Libro", true);
+		Categoria libro = new Categoria("Libro", "Opera cartacea scritta");
 		libro.aggiungiCampo(new Campo("Autore", "", true, true));
 		libro.aggiungiCampo(new Campo("Titolo", "", true, false));
 		libro.aggiungiCampo(new Campo("Colore copertina", "", true, false));
 		
-		Categoria romanzo = new Categoria("Romanzo", false);
+		Categoria romanzo = new Categoria("Romanzo", "Genere della narrativa scritto in prosa", libro);
 		romanzo.aggiungiCampo(new Campo("Numero capitoli", "", true, true));
 		romanzo.aggiungiCampo(new Campo("Numero pagine", "", true, false));
 		
-		Categoria poema = new Categoria("Poema", false);
+		Categoria poema = new Categoria("Poema", "Genere della narrativa scritto in versi", libro);
 		poema.aggiungiCampo(new Campo("Numero versi", "", true, true));
 		poema.aggiungiCampo(new Campo("Numero canti", "", false, false));
 		
-		Categoria epica = new Categoria("Epica", false);
+	
+		
+		Categoria epica = new Categoria("Epica", "Narrazione poetica di gesta eroiche", poema);
+		Categoria giallo = new Categoria("Giallo", "romanzo poliziesco", romanzo);
+		Categoria greca = new Categoria("Greca", " ", epica);
+		
 		poema.aggiungiSottoCategoria(epica);
+		romanzo.aggiungiSottoCategoria(giallo);
 		libro.aggiungiSottoCategoria(romanzo);
 		libro.aggiungiSottoCategoria(poema);
+		epica.aggiungiSottoCategoria(greca);
 		
-		System.out.println("Facciamo finta che un configuratore abbia creato una categoria\n\n");
+		/*System.out.println(CategoriaStringheFormattate.percorso(giallo));
+		System.out.println();
+		System.out.println(CategoriaStringheFormattate.percorso(greca));
+		System.out.println();
+		System.out.println(CategoriaStringheFormattate.tuttiCampi(greca));
 		
-		StringBuilder sb = new StringBuilder();
-		sb.append(libro.nomeCategoria+"\n");
+		epica.aggiungiCampo(new Campo("Periodo di creazione", "", false, false));*/
 		
-		for(Campo c : libro.campi) {
-			sb.append(c.getNome()+": ");
-			sb.append(c.getDescrizione()+"\n");
-		}
+		//pensare a rendere modifica unica per ogni articolo
+		libro.modificaDescrizioneCampo("Descrizione libera", "noioso");
+		System.out.println(CategoriaStringheFormattate.categoriaConDescr(libro)+"\n"+CategoriaStringheFormattate.conSottoCategorie(libro));
+		System.out.println();
+		System.out.println(CategoriaStringheFormattate.tuttiCampi(greca));
+		System.out.println();
+		System.out.println(CategoriaStringheFormattate.categoriaConDescr(libro)+"\n"+CategoriaStringheFormattate.tuttiCampi(libro));
+
 		
-		for(Categoria sottoCategoria : libro.sottoCategorie) {
-			sb.append(sottoCategoria.nomeCategoria+"\n");
-			if(sottoCategoria.hasSottoCategorie()) {
-				for(Categoria sottoSottoCategoria : sottoCategoria.sottoCategorie ) {
-					sb.append("\t"+sottoSottoCategoria.nomeCategoria+"\n");
-				}
-			}
-		}
-			
-		System.out.println(sb.toString());
+	
 		
-		libro.modificaDescrizioneCampo("Stato di Conservazione", "Perfettamente conservato");
-		libro.modificaDescrizioneCampo("Descrizione libera", "Bellissimo!!!");
-		libro.modificaDescrizioneCampo("Autore", "Italo Calvino");
-		libro.modificaDescrizioneCampo("Titolo", "Il Barone Rampante");
 		
-		System.out.println("\n\nFacciamo finta che un fruitore abbia compilato i campi\n\n");
-		sb.delete(0, sb.length());
-		sb.append(libro.nomeCategoria+"\n");
-		for(Campo c : libro.campi) {
-			sb.append(c.getNome()+": ");
-			sb.append(c.getDescrizione()+"\n");
-		}
-		
-		for(Categoria c : libro.sottoCategorie) {
-			sb.append(c.nomeCategoria+"\n");
-		}
-			
-		System.out.println(sb.toString());
 			
 	}
 

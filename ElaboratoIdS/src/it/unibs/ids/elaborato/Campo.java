@@ -6,10 +6,10 @@ package it.unibs.ids.elaborato;
 
 public class Campo {
 	
-	String nome;
-	String descrizione;
-	boolean modificabile;
-	boolean mandatory;
+	private String nome;
+	private String descrizione;
+	private boolean modificabile;
+	private boolean mandatory;
 	
 	
 	Campo(String nomeCampo, String descrizione, boolean modificabile, boolean mandatory){
