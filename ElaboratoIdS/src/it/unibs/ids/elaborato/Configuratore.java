@@ -11,7 +11,8 @@ public class Configuratore extends Utente {
 		this.isAuthorized = true;
 	}
 	
-	public Categoria creaCategoria() {
+	public Categoria creaCategoria(String nomeCategoria) {
+		
 		return null;
 	}
 	

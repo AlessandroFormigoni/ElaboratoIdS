@@ -4,8 +4,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		Controller c = new Controller(UserRegistryReader.getReadUserReg());
-		UserView uw = new UserView(c);
+		UserController c = new UserController(UserRegistryReader.getReadUserReg());
+		CategoryController d = new CategoryController();
+		UserView uw = new UserView(c, d);
 		uw.viewStartupScreen();
 		uw.login();
 		

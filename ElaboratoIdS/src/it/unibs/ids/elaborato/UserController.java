@@ -4,7 +4,7 @@ import java.util.*;
 
 import it.unibs.fp.mylib.InputDati;
 
-public class Controller {
+public class UserController {
 	
 	private static final int PASSWD_TRIAL_NUM = 3;
 	private static final String GENERIC_PASSWORD_ERROR = "Inserimento password fallito";
@@ -14,11 +14,10 @@ public class Controller {
 	private List<Utente> listaUtenti;
 	private List<Utente> loggedUsers;
 	
-	public Controller(List<Utente> listaUtenti) {
+	public UserController(List<Utente> listaUtenti) {
 		this.listaUtenti = listaUtenti;
 		this.loggedUsers = new ArrayList<>();
 	}
-	
 	
 	public Utente userLogin(String nome) {
 		try {
