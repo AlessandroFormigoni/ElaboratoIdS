@@ -6,6 +6,8 @@ package it.unibs.ids.elaborato;
 
 public class Campo {
 	
+	public static final String DA_COMPILARE= "è obbligatorio compilare questo campo";
+	
 	private String nome;
 	private String descrizione;
 	private boolean modificabile;
@@ -18,6 +20,14 @@ public class Campo {
 		this.modificabile = modificabile;
 		this.mandatory = mandatory;
 		
+	}
+	
+	Campo(String nomeCampo, boolean modificabile, boolean mandatory){
+		this.nome = nomeCampo;
+		this.modificabile=modificabile;
+		this.mandatory=mandatory;
+		if(mandatory==true) this.descrizione= DA_COMPILARE;
+		else this.descrizione = "";
 	}
 	
 	public boolean isMandatory() {
