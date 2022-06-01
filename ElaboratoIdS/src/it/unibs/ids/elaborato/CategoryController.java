@@ -12,17 +12,56 @@ private List<Categoria> listaCategorie;
 	
 	public void aggiungiCategoria(Categoria categoria) {
 		listaCategorie.add(categoria);
-		
+	}
+	
+	public void aggiungiCampo(String categoria, String nomeCampo, String descrizione, boolean modificabile, boolean mandatory) {
+		try {
+		getCategoria(categoria).aggiungiCampo(new Campo(nomeCampo, descrizione, modificabile, mandatory));
+		} catch(Exception e) {
+			System.out.println("Elemento non trovato");
+		}
+	}
+	
+	public void rimuoviCampo(String categoria, String nomeCampo) {
+		try {
+		getCategoria(categoria).rimuoviCampo(getCategoria(categoria).trovaCampoPerNome(nomeCampo));
+		} catch(Exception e) {
+			System.out.println("Elemento non trovato");
+		}
+	}
+	
+	public void aggiungiSottocategoria(String radice, String categoria, String nome, String descrizioneLibera) {
+		try {
+		Categoria key = getCategoria(categoria);
+		if(key.isRoot()) {
+			getCategoria(key).aggiungiSottoCategoria(new Categoria(nome, descrizioneLibera, key));
+		} else {
+			getCategoria(radice).findLeaf(key.trovaRoot(), categoria).aggiungiSottoCategoria(new Categoria(nome, descrizioneLibera));
+		}
+		} catch(Exception e ) {
+			System.out.println("Elemento non trovato");
+		}
 	}
 	
 	public void aggiungiNuovaCategoria(String nome, String descrizioneLibera) {
-		listaCategorie.add(new Categoria(nome, descrizioneLibera));
+		aggiungiCategoria(new Categoria(nome, descrizioneLibera));
+	}
+	
+	public void setCampiNativi(Categoria categoria, String descrizioneLibera, String statoDiConservazione) {
+		getCategoria(categoria).modificaDescrizioneCampo(Categoria.NOME_STATO_DI_CONSERVAZIONE, statoDiConservazione);
+		getCategoria(categoria).modificaDescrizioneCampo(Categoria.NOME_DESCRIZIONE_LIBERA, descrizioneLibera);
 	}
 	
 	public Categoria getCategoria(String categoria) {
 		for (Categoria cat : listaCategorie) {
 			if(cat.getNomeCategoria().equals(categoria)) return cat;
 		}
+		return null;
+	}
+	
+	public Categoria getCategoria(Categoria categoria) {
+		if(listaCategorie.contains(categoria))
+				return this.listaCategorie.get(this.listaCategorie.indexOf(categoria));
 		return null;
 	}
 	

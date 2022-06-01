@@ -4,7 +4,7 @@ public abstract class Utente {
 	public String nome;
 	public String password;
 	public boolean isFirstAccess;
-	public boolean isAuthorized;
+	public boolean authorization;
 	
 	public Utente(String nome, String password) {
 		this.nome = nome;
@@ -24,5 +24,6 @@ public abstract class Utente {
 	}
 
 	protected abstract void cambiaCredenziali();
+	protected abstract boolean isAuthorized();
 	
 }

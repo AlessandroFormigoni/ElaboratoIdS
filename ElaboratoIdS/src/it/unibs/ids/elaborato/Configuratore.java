@@ -8,7 +8,7 @@ public class Configuratore extends Utente {
 	public Configuratore(String nome, String password) {
 		super(nome, password);
 		this.isFirstAccess = true;
-		this.isAuthorized = true;
+		this.authorization = true;
 	}
 	
 	public Categoria creaCategoria(String nomeCategoria) {
@@ -24,6 +24,10 @@ public class Configuratore extends Utente {
 		this.nome = InputDati.leggiStringaNonVuota("Inserisci il tuo nuovo nickname: ");
 		this.password = InputDati.leggiStringaNonVuota("Inserisci la tua nuova password: ");
 		this.isFirstAccess = false;
+	}
+	
+	protected boolean isAuthorized() {
+		return authorization;
 	}
 
 }

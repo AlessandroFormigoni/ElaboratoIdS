@@ -31,6 +31,9 @@ public class TestCategoria {
 		libro.aggiungiSottoCategoria(poema);
 		epica.aggiungiSottoCategoria(greca);
 		
+		Categoria risultato = libro.findLeaf(libro, "Greca");
+		System.out.println(risultato.getNomeCategoria());
+		
 		/*System.out.println(CategoriaStringheFormattate.percorso(giallo));
 		System.out.println();
 		System.out.println(CategoriaStringheFormattate.percorso(greca));
@@ -40,13 +43,14 @@ public class TestCategoria {
 		epica.aggiungiCampo(new Campo("Periodo di creazione", "", false, false));*/
 		
 		//pensare a rendere modifica unica per ogni articolo
+		/*
 		libro.modificaDescrizioneCampo("Descrizione libera", "noioso");
 		System.out.println(CategoriaStringheFormattate.categoriaConDescr(libro)+"\n"+CategoriaStringheFormattate.conSottoCategorie(libro));
 		System.out.println();
 		System.out.println(CategoriaStringheFormattate.tuttiCampi(greca));
 		System.out.println();
 		System.out.println(CategoriaStringheFormattate.categoriaConDescr(libro)+"\n"+CategoriaStringheFormattate.tuttiCampi(libro));
-
+		*/
 		
 	
 		

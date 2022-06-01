@@ -9,6 +9,7 @@ public class Main {
 		UserView uw = new UserView(c, d);
 		uw.viewStartupScreen();
 		uw.login();
+		WriteUserRegistry.write(c.getListaUtenti());
 		
 	}
 

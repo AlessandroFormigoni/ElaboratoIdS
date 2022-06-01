@@ -54,7 +54,9 @@ public class UserRegistryReader {
 					case "configuratori":
 						break;
 					case "configuratore":
-						utenti.add(new Configuratore(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1)));
+						Configuratore conf = new Configuratore(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1));
+						if(Integer.parseInt(xmlr.getAttributeValue(2))!=0) conf.isFirstAccess = false;
+						utenti.add(conf);
 					case "fruitori":
 						break;
 					case "fruitore":

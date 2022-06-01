@@ -22,7 +22,7 @@ public class UserController {
 	public Utente userLogin(String nome) {
 		try {
 		Utente user = getUser(nome);
-		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user) && user.isAuthorized) {
+		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user) && user.authorization) {
 			System.out.println(LOGIN_SUCCESS);
 			loggedUsers.add(user);
 			if(user.isFirstAccess) {
@@ -72,6 +72,10 @@ public class UserController {
 	
 	public boolean hasUser(String nome) {
 		return listaUtenti.contains(getUser(nome));
+	}
+	
+	public List<Utente> getListaUtenti() {
+		return this.listaUtenti;
 	}
 
 }

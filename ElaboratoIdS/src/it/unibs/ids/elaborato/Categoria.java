@@ -187,8 +187,18 @@ public class Categoria implements Comparable<Categoria> {
 		for(Categoria c : this.sottoCategorie) {
 			if(c.getNomeCategoria().equals(nome)) return c;
 		}
-		return null;
+		return (new Categoria("", ""));
 	}
 	
+	public Categoria findLeaf(Categoria root, String nome) {
+		Categoria currentLeaf = root;
+			if(!currentLeaf.sottoCategorie.contains(trovaSottoCategoria(nome))) {
+				for(Categoria leaf : currentLeaf.sottoCategorie) {
+					currentLeaf = findLeaf(leaf, nome);
+					if(currentLeaf.getNomeCategoria().equals(nome)) return currentLeaf;
+				}
+			}
+			return root;
+	}
 
 }
