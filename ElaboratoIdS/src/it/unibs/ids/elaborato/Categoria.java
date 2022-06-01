@@ -174,5 +174,21 @@ public class Categoria implements Comparable<Categoria> {
 	public String toString(){
 		return this.getNomeCategoria();
 	}
+	
+	public Categoria trovaRoot() {
+		Categoria c = this.getGenitore();
+		while(!c.isRoot()) {
+			c=c.getGenitore();
+		}
+		return c;
+	}
+	
+	public Categoria trovaSottoCategoria(String nome) {
+		for(Categoria c : this.sottoCategorie) {
+			if(c.getNomeCategoria().equals(nome)) return c;
+		}
+		return null;
+	}
+	
 
 }
