@@ -27,6 +27,7 @@ public class Categoria implements Comparable<Categoria> {
 	private Categoria genitore;
 	TreeSet<Categoria> sottoCategorie;
 	HashSet<Campo> campi;
+	Map<Categoria, Set<Categoria>> mappa = new HashMap<>();
 	
 	/*
 	 * costruttore per categoria root
@@ -199,6 +200,28 @@ public class Categoria implements Comparable<Categoria> {
 				}
 			}
 			return root;
+	}
+	
+	public void putMappa(Map<Categoria, Set<Categoria>> mappa) {
+		this.mappa.putAll(mappa);
+	}
+	
+	public void creaMappa(){
+		
+		if(!this.isRoot()) {
+			mappa.put(this, this.sottoCategorie);
+			this.getGenitore().putMappa(mappa);
+			this.getGenitore().creaMappa();
+		} 
+		else {
+			mappa.put(this, this.sottoCategorie);
+		}
+		
+		
+	}
+	
+	public Map<Categoria, Set<Categoria>> getMappa(){
+		return mappa;
 	}
 
 }

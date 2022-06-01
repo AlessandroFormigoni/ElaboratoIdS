@@ -31,8 +31,8 @@ public class TestCategoria {
 		libro.aggiungiSottoCategoria(poema);
 		epica.aggiungiSottoCategoria(greca);
 		
-		Categoria risultato = libro.findLeaf(libro, "Greca");
-		System.out.println(risultato.getNomeCategoria());
+		//Categoria risultato = libro.findLeaf(libro, "Greca");
+		//System.out.println(risultato.getNomeCategoria());
 		
 		/*System.out.println(CategoriaStringheFormattate.percorso(giallo));
 		System.out.println();
@@ -51,6 +51,17 @@ public class TestCategoria {
 		System.out.println();
 		System.out.println(CategoriaStringheFormattate.categoriaConDescr(libro)+"\n"+CategoriaStringheFormattate.tuttiCampi(libro));
 		*/
+		
+		giallo.creaMappa();
+		/*for(Categoria c : libro.getMappa().keySet()) {
+			System.out.println(c.getNomeCategoria());
+		}
+		System.out.println("\n\n\n");*/
+		greca.creaMappa();
+		for(Categoria c : libro.getMappa().keySet()) {
+			System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
+		}
+		
 		
 	
 		
