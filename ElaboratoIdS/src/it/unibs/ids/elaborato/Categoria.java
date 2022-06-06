@@ -10,7 +10,7 @@ import java.util.*;
  */
 
 
-public class Categoria implements Comparable<Categoria> {
+public class Categoria implements Comparable<Categoria>, Cloneable {
 	
 	 public static final String NOME_STATO_DI_CONSERVAZIONE = "Stato di Conservazione";
 	 public static final String NOME_DESCRIZIONE_LIBERA = "Descrizione libera";
@@ -42,6 +42,7 @@ public class Categoria implements Comparable<Categoria> {
 		descrizioneLibera = new Campo(NOME_DESCRIZIONE_LIBERA, DESCRIZIONE_DEAFAULT ,!MODIFICABILE, MANDATORY);
 		campi.add(descrizioneLibera);
 		campi.add(statoDiConservazione);
+		creaMappa();
 		
 	}
 	
@@ -54,8 +55,10 @@ public class Categoria implements Comparable<Categoria> {
 		this.descrizioneCategoria=descrizioneCategoria;
 		this.root=false;
 		this.genitore=genitore;
+		this.genitore.sottoCategorie.add(this);
 		sottoCategorie = new TreeSet<>();
 		campi = new HashSet<>();
+		creaMappa();
 	}
 	
 	public boolean isRoot() {
@@ -161,7 +164,10 @@ public class Categoria implements Comparable<Categoria> {
 	}
 	
 	public boolean aggiungiSottoCategoria(Categoria daAggiungere) {
-		if(!daAggiungere.root && sottoCategorie.add(daAggiungere)) return true;
+		if(!daAggiungere.root && sottoCategorie.add(daAggiungere)) {  
+			this.creaMappa();
+			return true;
+		}
 		else return false;
 		
 	}
@@ -191,7 +197,7 @@ public class Categoria implements Comparable<Categoria> {
 		return (new Categoria("", ""));
 	}
 	
-	public Categoria findLeaf(Categoria root, String nome) {
+	public synchronized Categoria findLeaf(Categoria root, String nome) {
 		Categoria currentLeaf = root;
 			if(!currentLeaf.sottoCategorie.contains(trovaSottoCategoria(nome))) {
 				for(Categoria leaf : currentLeaf.sottoCategorie) {
@@ -223,5 +229,57 @@ public class Categoria implements Comparable<Categoria> {
 	public Map<Categoria, Set<Categoria>> getMappa(){
 		return mappa;
 	}
+	
+	public static synchronized Categoria treeGet(Set<Categoria> tree, Categoria obj) {
+		for(Categoria t : tree) {
+			if(t.equals(obj)) return t;
+		}
+		return null;
+	}
+	
+	public static synchronized Categoria treeGet(Set<Categoria> tree, String obj) {
+		for(Categoria t : tree) {
+			if(t.getNomeCategoria().equals(obj)) return t;
+		}
+		return null;
+	}
+	
+	public TreeSet<Categoria> treeReconstructor(Map<Categoria, Set<Categoria>> mappa) {
+		TreeSet<Categoria> tree = new TreeSet<>();
+		mappa.keySet().stream().filter(r -> r.isRoot()).forEach(v -> {
+			//Categoria root = new Categoria("", "");
+			try {
+				tree.add((Categoria)v.clone());
+				
+				Map<Categoria, Set<Categoria>> copia = new HashMap<>();
+				copia.putAll(mappa);
+				
+				List<Categoria> visited = new ArrayList<>();
+				for(Categoria key : mappa.keySet()) {
+					if(visited.contains(key)) continue;
+					Categoria root = findLeaf(tree.first(), key.getDescrizioneCategoria());
+					if(root!=null && root.hasSottoCategorie()) {
+							TreeSet<Categoria> lista = root.sottoCategorie;
+							if(lista.containsAll(visited)) continue;
+							synchronized(lista) {
+							lista.addAll(copia.get(key));
+							}
+							
+								
+					}
+					
+				}
+				
+			} catch(Exception e) {
+				//e.printStackTrace();
+			}
+		});
+		
+		return tree;
+	}
+	
+	public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 }

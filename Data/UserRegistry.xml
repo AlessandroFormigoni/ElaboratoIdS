@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<utenti>
-	
-	<configuratori>
-	<configuratore nome = "Aldo" password = "redmax"/>
-	<configuratore nome = "Carlos" password = "amogus"/>
-	</configuratori>
-	
-	<fruitori>
-	</fruitori>
-	
-</utenti>
+<?xml version="1.0" ?><utenti><configuratori><configuratore nome="aaaa" password="bbbb" firstAccess="1"></configuratore><configuratore nome="Giorno" password="Giovanna" firstAccess="1"></configuratore></configuratori></utenti>

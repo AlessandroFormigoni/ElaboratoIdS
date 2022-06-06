@@ -76,5 +76,9 @@ private List<Categoria> listaCategorie;
 	public List<Categoria> getCategorie() {
 		return this.listaCategorie;
 	}
+	
+	public void setCategorie(List<Categoria> listaCategorie) {
+		this.listaCategorie = listaCategorie;
+	}
 
 }
