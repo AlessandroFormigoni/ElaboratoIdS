@@ -69,6 +69,14 @@ public class CategoryReader {
 						Categoria sbcat = new Categoria(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1), genitore);
 						categorie.add(sbcat);
 						break;
+					case "campo":
+						Campo cam = new Campo(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1), xmlr.getAttributeValue(2).equals("true"), xmlr.getAttributeValue(3).equals("true"));
+						for(Categoria c: categorie) {
+							if(c.getNomeCategoria().equals(xmlr.getAttributeValue(4))) {
+								c.aggiungiCampo(cam);
+							}
+						}
+						break;
 					}
 					break;
 				 case XMLStreamConstants.END_ELEMENT:

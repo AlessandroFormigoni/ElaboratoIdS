@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class WriteCategorie {
@@ -60,9 +61,33 @@ public class WriteCategorie {
 				}
 				
 			}
+			writeFields(categoria);
 			xmlw.writeEndElement();
 			xmlw.flush();
 		} catch(Exception e) {e.printStackTrace();}
+	}
+	
+	public static void writeFields(List<Categoria> categorie) {
+		try {
+			xmlw.writeStartElement("campi");
+			for(Categoria cat: categorie) {
+				for(Campo cam: cat.getListaCampi()) {
+					xmlw.writeStartElement("campo");
+					xmlw.writeAttribute("nome", cam.getNome());
+					xmlw.writeAttribute("descrizione", cam.getDescrizione());
+					if(cam.isModificabile()) xmlw.writeAttribute("modificabile", "true");
+						else xmlw.writeAttribute("modificabile", "false");
+					if(cam.isMandatory()) xmlw.writeAttribute("mandatory", "true");
+						else xmlw.writeAttribute("mandatory", "false");
+					xmlw.writeAttribute("proprietario", cat.getNomeCategoria());
+					
+					xmlw.writeEndElement();
+				}
+			}
+			xmlw.writeEndElement();
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void write(List<Categoria> categorie) {

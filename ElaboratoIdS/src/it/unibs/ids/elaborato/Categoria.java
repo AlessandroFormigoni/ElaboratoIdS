@@ -22,8 +22,6 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	private String nomeCategoria;
 	private String descrizioneCategoria;
 	private boolean root;
-	private Campo statoDiConservazione;
-	private Campo descrizioneLibera;
 	private Categoria genitore;
 	TreeSet<Categoria> sottoCategorie;
 	HashSet<Campo> campi;
@@ -38,10 +36,8 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 		this.root=true;
 		sottoCategorie = new TreeSet<>();
 		campi = new HashSet<>();
-		statoDiConservazione = new Campo(NOME_STATO_DI_CONSERVAZIONE, DESCRIZIONE_DEAFAULT, !MODIFICABILE, MANDATORY);
-		descrizioneLibera = new Campo(NOME_DESCRIZIONE_LIBERA, DESCRIZIONE_DEAFAULT ,!MODIFICABILE, MANDATORY);
-		campi.add(descrizioneLibera);
-		campi.add(statoDiConservazione);
+		campi.add(new Campo(NOME_STATO_DI_CONSERVAZIONE, DESCRIZIONE_DEAFAULT, !MODIFICABILE, MANDATORY));
+		campi.add(new Campo(NOME_DESCRIZIONE_LIBERA, DESCRIZIONE_DEAFAULT ,!MODIFICABILE, MANDATORY));
 		creaMappa();
 		
 	}
@@ -88,7 +84,7 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	
 	
 	public void aggiungiCampo(Campo campo){
-		 campi.add(campo);
+		if(!campo.getNome().equals(Categoria.NOME_DESCRIZIONE_LIBERA)&&!campo.getNome().equals(Categoria.NOME_STATO_DI_CONSERVAZIONE))campi.add(campo);
 		}
 	
 	public Campo trovaCampo(Campo daTrovare) {
@@ -281,5 +277,12 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+	
+	public Set<Campo> getSetCampi(){
+		return this.campi;
+	}
+	public List<Campo> getListaCampi(){
+		return new ArrayList<Campo>(this.campi);
+	}
 
 }
