@@ -1,7 +1,7 @@
 package it.unibs.ids.elaborato;
 
 import java.io.FileOutputStream;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -9,7 +9,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class WriteCategorie {
-	static String filename = "../Data/Categories.xml";
+	static String filename = "./Data/Categories.xml";
 	static String version = "1.0";
 	static String encoding = "UTF-8";
 	static XMLStreamWriter xmlw = null;
@@ -26,6 +26,7 @@ public class WriteCategorie {
 	
 	public static void writeCategories(List<Categoria> categoria) {
 		try {
+			categoria = orderList(categoria);
 			xmlw.writeStartElement("categorie");
 			for(Categoria cat : categoria) {
 				try {
@@ -93,6 +94,13 @@ public class WriteCategorie {
 	public static void write(List<Categoria> categorie) {
 		initializeWriter();
 		writeCategories(categorie);
+	}
+	
+	private static List<Categoria> orderList(List<Categoria> categorie) {
+		List<Categoria> newList = new ArrayList<>();
+		categorie.stream().filter(cat -> cat.isRoot()).forEach(cat -> newList.add(cat));
+		categorie.stream().filter(cat -> !cat.isRoot()).forEach(cat -> newList.add(cat));
+		return newList;
 	}
 
 }

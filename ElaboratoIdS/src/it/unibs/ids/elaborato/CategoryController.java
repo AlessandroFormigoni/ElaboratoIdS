@@ -32,12 +32,17 @@ private List<Categoria> listaCategorie;
 	
 	public void aggiungiSottocategoria(String radice, String categoria, String nome, String descrizioneLibera) {
 		try {
-		Categoria key = getCategoria(categoria);
-		if(key.isRoot()) {
-			getCategoria(key).aggiungiSottoCategoria(new Categoria(nome, descrizioneLibera, key));
-		} else {
-			getCategoria(radice).findLeaf(key.trovaRoot(), categoria).aggiungiSottoCategoria(new Categoria(nome, descrizioneLibera));
-		}
+			Categoria key = getCategoria(categoria);
+			final Categoria subCat = new Categoria(nome, descrizioneLibera, key);
+			
+			if(key.isRoot()) {
+				getCategoria(key).aggiungiSottoCategoria(subCat);
+			} else {
+				getCategoria(radice).findLeaf(key.trovaRoot(), categoria).aggiungiSottoCategoria(subCat);
+			}
+			
+			listaCategorie.add(subCat);
+			
 		} catch(Exception e ) {
 			System.out.println("Elemento non trovato");
 		}

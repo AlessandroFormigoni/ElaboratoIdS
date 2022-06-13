@@ -6,7 +6,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
 public class WriteUserRegistry {
-	static String filename = "../Data/UserRegistry.xml";
+	static String filename = "./Data/UserRegistry.xml";
 	static String version = "1.0";
 	static String encoding = "UTF-8";
 	static XMLStreamWriter xmlw = null;

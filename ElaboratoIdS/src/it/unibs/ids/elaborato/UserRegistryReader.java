@@ -14,7 +14,7 @@ import it.unibs.fp.mylib.InputDati;
 
 public class UserRegistryReader {
 
-	static String filename = "../Data/UserRegistry.xml";
+	static String filename = "./Data/UserRegistry.xml";
 	static String absolutePath = new File(filename).getAbsolutePath();
 	static String baseDirectory = "/ElaboratoIdS/Data";
 	static XMLStreamReader xmlr = null;

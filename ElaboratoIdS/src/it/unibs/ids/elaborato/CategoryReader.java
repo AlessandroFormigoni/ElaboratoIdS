@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamReader;
 import it.unibs.fp.mylib.InputDati;
 
 public class CategoryReader {
-	static String filename = "../Data/Categories.xml";
+	static String filename = "./Data/Categories.xml";
 	static String absolutePath = new File(filename).getAbsolutePath();
 	static String baseDirectory = "/ElaboratoIdS/Data";
 	static XMLStreamReader xmlr = null;
@@ -91,9 +91,12 @@ public class CategoryReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static ArrayList<Categoria> readCategories() {
+	public static List<Categoria> readCategories() {
 		initializeReader();
 		extractCategories();
+		List<Categoria> tree = new ArrayList<>(reconstructedTree());
+		categorie.addAll(tree);
+		trimLeaves(tree);
 		return categorie;
 	}
 	
@@ -122,6 +125,13 @@ public class CategoryReader {
 	private static Categoria getCategoria(String s) {
 		return categorie.stream().filter(c -> c.getNomeCategoria().equals(s)).findFirst().get();
 	}
-	
+
+	private static void trimLeaves(List<Categoria> tree) {
+		for(Categoria c : tree) {
+			if(!getCategoria(c.getNomeCategoria()).equals(null)) {
+				categorie.remove(categorie.indexOf(getCategoria(c.getNomeCategoria())));
+			}
+		}
+	}
 
 }

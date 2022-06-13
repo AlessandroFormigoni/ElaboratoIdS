@@ -6,7 +6,7 @@ import it.unibs.fp.mylib.InputDati;
 public class UserView {
 	
 	private static final String SEPARATORE = "-------------------------";
-	private final static String MESSAGGIO_DI_BENVENUTO = "Benvenuti alla applicazione del barattolo v0.0.1, inserite le vostre credenziali per inizare";
+	private final static String MESSAGGIO_DI_BENVENUTO = "Benvenuti alla applicazione del barattolo v0.0.2, inserite le vostre credenziali per inizare";
 	private UserController userController;
 	private CategoryController categoryController;
 	private Utente currentUser;
@@ -51,10 +51,9 @@ public class UserView {
 		do {
 			System.out.println("1. Crea categoria");
 			System.out.println("2. Modifica categoria");
-			System.out.println("3. Elimina categoria");
-			System.out.println("4. Mostra categorie");
-			System.out.println("5. Esegui logout");
-			System.out.println("6. Esci");
+			System.out.println("3. Mostra categorie");
+			System.out.println("4. Esegui logout");
+			System.out.println("5. Esci");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch (choice) {
 				case 1:
@@ -64,8 +63,6 @@ public class UserView {
 					modificaCategoriaView();
 					break;
 				case 3:
-					break;
-				case 4:
 					System.out.println("Lista delle categorie: ");
 					System.out.println(BelleStringhe.incolonna("Nome", 20) + " | " + BelleStringhe.incolonna("Descrizione", 20));
 					for(Categoria categoria : categoryController.getCategorie()) {
@@ -75,10 +72,10 @@ public class UserView {
 
 					}
 					break;
-				case 5:
+				case 4:
 					stay = logoutView(stay);
 					break;
-				case 6:
+				case 5:
 					System.out.println("Uscendo...");
 					stay = false;
 					break;
@@ -127,10 +124,8 @@ public class UserView {
 		do {
 			System.out.println("Come vuole modificare la categoria?");
 			System.out.println("1. Aggiungi campo");
-			System.out.println("2. Rimuovi campo");
-			System.out.println("3. Aggiungi sottocategoria");
-			System.out.println("4. Rimuovi sottocategoria");
-			System.out.println("5. Esci");
+			System.out.println("2. Aggiungi sottocategoria");
+			System.out.println("3. Esci");
 			int choice = InputDati.leggiIntero("Inserisci il numero: ");
 			switch(choice) {
 				case 1:
@@ -142,8 +137,6 @@ public class UserView {
 					categoryController.aggiungiCampo(nomeCategoria, nomeCampo, descrizione, modificabile, mandatory);
 					break;
 				case 2:
-					break;
-				case 3:
 					String nomeRadice = InputDati.leggiStringaNonVuota("Inserisci nome categoria radice: ");
 					String nomeCat = InputDati.leggiStringaNonVuota("Inserisci nome categoria madre: ");
 					String nomeStCat = InputDati.leggiStringaNonVuota("Inserisci nome della nuova sottocategoria: ");
@@ -151,9 +144,7 @@ public class UserView {
 	
 					categoryController.aggiungiSottocategoria(nomeRadice, nomeCat, nomeStCat, descLibStCat);
 					break;
-				case 4:
-					break;
-				case 5:
+				case 3:
 					stay = false;
 					break;
 				default:
