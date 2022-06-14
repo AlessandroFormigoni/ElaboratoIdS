@@ -9,7 +9,7 @@ public class Main {
 		d.setCategorie(CategoryReader.readCategories());
 		UserView uw = new UserView(c, d);
 		uw.viewStartupScreen();
-		uw.login();
+		uw.accessMenu();
 		WriteUserRegistry.write(c.getListaUtenti());
 		WriteCategorie.write(d.getCategorie());
 		

@@ -97,7 +97,7 @@ public class UserView {
 			if(yn.toUpperCase().equals("Y")) {
 				currentUser = null;
 				System.out.println(SEPARATORE);
-				login();
+				accessMenu();
 			} else if (yn.toUpperCase().equals("N")) {
 				stay = false;
 				break;
@@ -177,6 +177,23 @@ public class UserView {
 	public void viewStartupScreen() {
 		System.out.println(MESSAGGIO_DI_BENVENUTO);
 		System.out.println(SEPARATORE);
+	}
+	
+	public void accessMenu() {
+		System.out.println("Effettuare login o creare nuovo account fruitore");
+		System.out.println("1. login");
+		System.out.println("2. nuovo fruitore");
+		int choice = InputDati.leggiIntero("Inserisci il numero: ");
+		switch(choice) {
+		
+		case 1:
+			login();
+			break;
+		
+		case 2:
+			
+		
+		}
 	}
 
 }
