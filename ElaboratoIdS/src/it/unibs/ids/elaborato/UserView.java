@@ -179,10 +179,17 @@ public class UserView {
 		System.out.println(SEPARATORE);
 	}
 	
+	public void creaFruitore() {
+		String nomeFruitore = InputDati.leggiStringaNonVuota("Nome nuovo fruitore: ");
+		String password = InputDati.leggiStringaNonVuota("Password: ");
+		//userController.getListaUtenti().add(new Utente(nomeFruitore, password));
+	}
+	
 	public void accessMenu() {
 		System.out.println("Effettuare login o creare nuovo account fruitore");
-		System.out.println("1. login");
-		System.out.println("2. nuovo fruitore");
+		System.out.println("1. Login");
+		System.out.println("2. Nuovo fruitore");
+		System.out.println("3. Esci");
 		int choice = InputDati.leggiIntero("Inserisci il numero: ");
 		switch(choice) {
 		
@@ -191,6 +198,12 @@ public class UserView {
 			break;
 		
 		case 2:
+			creaFruitore();
+			break;
+			
+		case 3:
+			System.out.println("Uscendo...");
+			break;
 			
 		
 		}
