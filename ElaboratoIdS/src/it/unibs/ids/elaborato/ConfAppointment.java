@@ -10,7 +10,8 @@ public class ConfAppointment {
 	public static final float IN_PUNTO = 0.0f;
 	public static final float MEZZA = 0.3f;
 	public static final float QUASI_MEZZA =0.29999f;
-	public static final String[] GIORNI_SETTIMANA= {"lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"};
+	//public static final String[] GIORNI_SETTIMANA= {"lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"};
+	
 	
 	private String piazza;
 	private List<String> luoghi;
@@ -75,9 +76,11 @@ public class ConfAppointment {
 	}
 	
 	public void addGiorno(String giorno) {
-		for(int i=0; i<GIORNI_SETTIMANA.length; i++) {
-			if(giorno.equals(GIORNI_SETTIMANA[i])&&!giorni.contains(giorno)) giorni.add(giorno);
-		}
+		if(!giorni.contains(giorno)) giorni.add(giorno);
+	}
+	
+	public void addGiorno(GiornoSettimana giorno) {
+		if(!giorni.contains(giorno.name())) giorni.add(giorno.name());
 	}
 	
 	public void addLuogo(String luogo) {
