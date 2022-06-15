@@ -8,6 +8,6 @@ public enum GiornoSettimana {
 	GIOVEDI,
 	VENERDI,
 	SABATO,
-	DOMANICA;
+	DOMENICA;
 	
 }
