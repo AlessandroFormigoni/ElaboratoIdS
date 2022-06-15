@@ -6,8 +6,9 @@ public class Main {
 		
 		UserController c = new UserController(UserRegistryReader.getReadUserReg());
 		CategoryController d = new CategoryController();
+		AppointmentController e = new AppointmentController();
 		d.setCategorie(CategoryReader.readCategories());
-		UserView uw = new UserView(c, d);
+		UserView uw = new UserView(c, d, e);
 		uw.viewStartupScreen();
 		uw.accessMenu();
 		WriteUserRegistry.write(c.getListaUtenti());

@@ -9,11 +9,15 @@ public class UserView {
 	private final static String MESSAGGIO_DI_BENVENUTO = "Benvenuti alla applicazione del barattolo v0.0.2, inserite le vostre credenziali per inizare";
 	private UserController userController;
 	private CategoryController categoryController;
+	private AppointmentController appointmentController;
+	private AppointmentView appointmentView;
 	private Utente currentUser;
 	
-	public UserView(UserController controller, CategoryController categoryController) {
+	public UserView(UserController controller, CategoryController categoryController, AppointmentController appointmentController) {
 		this.userController = controller;
 		this.categoryController = categoryController;
+		this.appointmentController = appointmentController;
+		this.appointmentView = new AppointmentView();
 	}
 	
 	public void login() {
@@ -59,8 +63,9 @@ public class UserView {
 			System.out.println("1. Crea categoria");
 			System.out.println("2. Modifica categoria");
 			System.out.println("3. Mostra categorie");
-			System.out.println("4. Esegui logout");
-			System.out.println("5. Esci");
+			System.out.println("4. Crea nuovo appuntamento");
+			System.out.println("5. Esegui logout");
+			System.out.println("6. Esci");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch (choice) {
 				case 1:
@@ -80,10 +85,13 @@ public class UserView {
 					}
 					break;
 				case 4:
+					appointmentView.makeAppointment(appointmentController);
+					break;
+				case 5:
 					stay = false;
 					logoutView();
 					break;
-				case 5:
+				case 6:
 					System.out.println("Uscendo...");
 					stay = false;
 					break;
@@ -107,6 +115,7 @@ public class UserView {
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch(choice) {
 				case 1:
+					appointmentView.viewAppointments(appointmentController);
 					break;
 				case 2:
 					logoutView();
