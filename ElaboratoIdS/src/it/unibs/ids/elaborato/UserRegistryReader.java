@@ -60,6 +60,9 @@ public class UserRegistryReader {
 					case "fruitori":
 						break;
 					case "fruitore":
+						Fruitore fruit = new Fruitore(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1));
+						if(Integer.parseInt(xmlr.getAttributeValue(2))!=0) fruit.isFirstAccess = false;
+						utenti.add(fruit);
 						break;
 					}
 					break;

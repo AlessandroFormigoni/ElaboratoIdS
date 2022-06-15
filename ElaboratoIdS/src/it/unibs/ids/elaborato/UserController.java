@@ -22,10 +22,10 @@ public class UserController {
 	public Utente userLogin(String nome) {
 		try {
 		Utente user = getUser(nome);
-		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user) && user.authorization) {
+		if(!user.equals(null) && !loggedUsers.contains(user) && loginAuthentication(user)) {
 			System.out.println(LOGIN_SUCCESS);
 			loggedUsers.add(user);
-			if(user.isFirstAccess) {
+			if(user.isFirstAccess && user.isAuthorized()) {
 				firstConfigLogin((Configuratore) user);
 			}
 			return user;
@@ -34,6 +34,12 @@ public class UserController {
 			System.out.println(GENERIC_LOGIN_ERROR);
 		}
 		return null;
+	}
+	
+	public void newFruitore(String nome, String password) {
+		Fruitore fruitore = new Fruitore(nome, password);
+		fruitore.isFirstAccess = false;
+		this.listaUtenti.add(fruitore);
 	}
 	
 	private void firstConfigLogin(Configuratore conf) {

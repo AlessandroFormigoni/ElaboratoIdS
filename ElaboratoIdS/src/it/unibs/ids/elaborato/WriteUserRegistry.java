@@ -38,6 +38,20 @@ public class WriteUserRegistry {
 				}
 			});
 			xmlw.writeEndElement();
+			xmlw.writeStartElement("fruitori");
+			utenti.stream().filter(u -> !u.isAuthorized()).forEach(fruit -> {
+				try {
+					xmlw.writeStartElement("fruitore");
+					xmlw.writeAttribute("nome", fruit.getName());
+					xmlw.writeAttribute("password", fruit.getPassword());
+					if(!fruit.isFirstAccess) xmlw.writeAttribute("firstAccess", "1");
+					else xmlw.writeAttribute("firstAccess", "0");
+					xmlw.writeEndElement();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			});
+			xmlw.writeEndElement();
 			xmlw.writeEndElement();
 			xmlw.flush();
 		} catch(Exception e) {e.printStackTrace();}

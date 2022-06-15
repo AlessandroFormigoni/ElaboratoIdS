@@ -19,11 +19,15 @@ public class UserView {
 	public void login() {
 		String username = "";
 		boolean tryAgain = false;
+		boolean loginSuccessful = false;
 		do {
 			try {
 				username = InputDati.leggiStringaNonVuota("Inserisci il nome: ");
 				currentUser = userController.userLogin(username);
-				if (!currentUser.equals(null)) tryAgain = false;
+				if (!currentUser.equals(null)) {
+					tryAgain = false;
+					loginSuccessful = true;
+				}
 			}
 				catch (Exception e) {
 						boolean inctr = false;
@@ -32,6 +36,7 @@ public class UserView {
 							if(yn.toUpperCase().equals("Y")) {
 								tryAgain = true;
 							} else if (yn.toUpperCase().equals("N")) {
+								loginSuccessful = false;
 								break;
 							} else {
 								tryAgain = false;
@@ -42,7 +47,9 @@ public class UserView {
 					
 				}
 	} while(tryAgain);
-		if(currentUser.authorization) confMenu();
+		if(loginSuccessful && currentUser.isAuthorized()) confMenu();
+		else if (loginSuccessful) fruitoreMenu();
+		else System.out.println("Terminazione programma");
 	}
 	private void confMenu() {
 		System.out.println(SEPARATORE);
@@ -73,7 +80,8 @@ public class UserView {
 					}
 					break;
 				case 4:
-					stay = logoutView(stay);
+					stay = false;
+					logoutView();
 					break;
 				case 5:
 					System.out.println("Uscendo...");
@@ -87,8 +95,36 @@ public class UserView {
 			System.out.println(SEPARATORE);
 		} while(stay);
 	}
+	
+	private void fruitoreMenu() {
+		System.out.println(SEPARATORE);
+		System.out.println("Benvenuto fruitore " + currentUser.nome + " queste sono le tue funzionalita: ");
+		boolean stay = true;
+		do {
+			System.out.println("1. Visualizza dettagli appuntamenti");
+			System.out.println("2. Esegui logout");
+			System.out.println("3. Esci");
+			int choice = InputDati.leggiIntero("Inserisci numero: ");
+			switch(choice) {
+				case 1:
+					break;
+				case 2:
+					logoutView();
+					stay = false;
+					break;
+				case 3:
+					stay = false;
+					System.out.println("Uscendo...");
+					break;
+				default:
+					System.out.println("Comando illegale");
+					break;
+			}
+		}while(stay);
+		
+	}
 
-	private boolean logoutView(boolean stay) {
+	private void logoutView() {
 		logout(currentUser);
 		System.out.println();
 		boolean hasDecided = true;
@@ -97,16 +133,14 @@ public class UserView {
 			if(yn.toUpperCase().equals("Y")) {
 				currentUser = null;
 				System.out.println(SEPARATORE);
-				accessMenu();
+				login();
 			} else if (yn.toUpperCase().equals("N")) {
-				stay = false;
 				break;
 			} else {
 				hasDecided = false;
 				System.out.println("Carattere non valido");
 			}
 		} while(!hasDecided);
-		return stay;
 	}
 
 	private void creaCategoriaView() {
@@ -182,10 +216,12 @@ public class UserView {
 	public void creaFruitore() {
 		String nomeFruitore = InputDati.leggiStringaNonVuota("Nome nuovo fruitore: ");
 		String password = InputDati.leggiStringaNonVuota("Password: ");
-		//userController.getListaUtenti().add(new Utente(nomeFruitore, password));
+		userController.newFruitore(nomeFruitore, password);
 	}
 	
 	public void accessMenu() {
+		boolean stay = true;
+		do {
 		System.out.println("Effettuare login o creare nuovo account fruitore");
 		System.out.println("1. Login");
 		System.out.println("2. Nuovo fruitore");
@@ -202,11 +238,12 @@ public class UserView {
 			break;
 			
 		case 3:
+			stay = false;
 			System.out.println("Uscendo...");
 			break;
 			
 		
 		}
+		}while(stay);
 	}
-
 }
