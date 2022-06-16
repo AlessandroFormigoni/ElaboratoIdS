@@ -37,9 +37,13 @@ public class UserController {
 	}
 	
 	public void newFruitore(String nome, String password) {
+		if(getUser(nome)!=null) {
+			System.out.println("Il nome utente e' gia in uso");
+		} else {
 		Fruitore fruitore = new Fruitore(nome, password);
 		fruitore.isFirstAccess = false;
 		this.listaUtenti.add(fruitore);
+		}
 	}
 	
 	private void firstConfigLogin(Configuratore conf) {

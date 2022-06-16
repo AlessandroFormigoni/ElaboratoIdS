@@ -75,14 +75,7 @@ public class UserView {
 					modificaCategoriaView();
 					break;
 				case 3:
-					System.out.println("Lista delle categorie: ");
-					System.out.println(BelleStringhe.incolonna("Nome", 20) + " | " + BelleStringhe.incolonna("Descrizione", 20));
-					for(Categoria categoria : categoryController.getCategorie()) {
-						System.out.println(CategoriaStringheFormattate.categoriaConDescr(categoria));
-						System.out.println(CategoriaStringheFormattate.conCampi(categoria));
-						System.out.println(CategoriaStringheFormattate.conSottoCategorie(categoria));
-
-					}
+					printCategorie();
 					break;
 				case 4:
 					appointmentView.makeAppointment(appointmentController);
@@ -110,20 +103,19 @@ public class UserView {
 		boolean stay = true;
 		do {
 			System.out.println("1. Visualizza dettagli appuntamenti");
-			System.out.println("2. Esegui logout");
-			System.out.println("3. Esci");
+			System.out.println("2. Visualizza categorie");
+			System.out.println("3. Esegui logout");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch(choice) {
 				case 1:
 					appointmentView.viewAppointments(appointmentController);
 					break;
 				case 2:
-					logoutView();
-					stay = false;
+					printCategorie();
 					break;
 				case 3:
+					logoutView();
 					stay = false;
-					System.out.println("Uscendo...");
 					break;
 				default:
 					System.out.println("Comando illegale");
@@ -197,12 +189,21 @@ public class UserView {
 		} while(stay);
 	}
 	
+	private void printCategorie() {
+		System.out.println("Lista delle categorie: ");
+		System.out.println(BelleStringhe.incolonna("Nome", 20) + " | " + BelleStringhe.incolonna("Descrizione", 20));
+		for(Categoria categoria : categoryController.getCategorie()) {
+			System.out.println(CategoriaStringheFormattate.categoriaConDescr(categoria));
+			System.out.println(CategoriaStringheFormattate.conCampi(categoria));
+			System.out.println(CategoriaStringheFormattate.conSottoCategorie(categoria));
+
+		}
+	}
+	
 	private boolean leggiBool(String messaggio) {
-		boolean stay = true;
 		do {
 			String yn = InputDati.leggiStringaNonVuota(messaggio + "[Y/n]");
 			if(yn.toUpperCase().equals("Y")) {
-				stay = false;
 				return true;
 			} else if (yn.toUpperCase().equals("N")) {
 				return false;
