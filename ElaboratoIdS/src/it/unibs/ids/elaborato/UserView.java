@@ -1,10 +1,12 @@
 package it.unibs.ids.elaborato;
 
-import it.unibs.fp.mylib.BelleStringhe;
+
 import it.unibs.fp.mylib.InputDati;
 
 public class UserView {
 	
+	private static final String INSERISCI_IL_NUMERO = "Inserisci il numero: ";
+	private static final String EXIT = "Uscendo...";
 	private static final String SEPARATORE = "-------------------------";
 	private final static String MESSAGGIO_DI_BENVENUTO = "Benvenuti alla applicazione del barattolo v0.0.2, inserite le vostre credenziali per inizare";
 	private UserController userController;
@@ -65,7 +67,6 @@ public class UserView {
 			System.out.println("3. Mostra categorie");
 			System.out.println("4. Crea nuovo appuntamento");
 			System.out.println("5. Esegui logout");
-			System.out.println("6. Esci");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch (choice) {
 				case 1:
@@ -83,10 +84,6 @@ public class UserView {
 				case 5:
 					stay = false;
 					logoutView();
-					break;
-				case 6:
-					System.out.println("Uscendo...");
-					stay = false;
 					break;
 				default:
 					System.out.println("Comando illegale");
@@ -136,6 +133,7 @@ public class UserView {
 				System.out.println(SEPARATORE);
 				login();
 			} else if (yn.toUpperCase().equals("N")) {
+				System.out.println(EXIT);
 				break;
 			} else {
 				hasDecided = false;
@@ -161,7 +159,7 @@ public class UserView {
 			System.out.println("1. Aggiungi campo");
 			System.out.println("2. Aggiungi sottocategoria");
 			System.out.println("3. Esci");
-			int choice = InputDati.leggiIntero("Inserisci il numero: ");
+			int choice = InputDati.leggiIntero(INSERISCI_IL_NUMERO);
 			switch(choice) {
 				case 1:
 					String nomeCategoria = InputDati.leggiStringaNonVuota("Inserisci nome categoria: ");
@@ -191,11 +189,12 @@ public class UserView {
 	
 	private void printCategorie() {
 		System.out.println("Lista delle categorie: ");
-		System.out.println(BelleStringhe.incolonna("Nome", 20) + " | " + BelleStringhe.incolonna("Descrizione", 20));
+		System.out.println(SEPARATORE);
 		for(Categoria categoria : categoryController.getCategorie()) {
 			System.out.println(CategoriaStringheFormattate.categoriaConDescr(categoria));
-			System.out.println(CategoriaStringheFormattate.conCampi(categoria));
+			System.out.println(CategoriaStringheFormattate.tuttiCampi(categoria));
 			System.out.println(CategoriaStringheFormattate.conSottoCategorie(categoria));
+			System.out.println(SEPARATORE);
 
 		}
 	}
@@ -236,7 +235,7 @@ public class UserView {
 		System.out.println("1. Login");
 		System.out.println("2. Nuovo fruitore");
 		System.out.println("3. Esci");
-		int choice = InputDati.leggiIntero("Inserisci il numero: ");
+		int choice = InputDati.leggiIntero(INSERISCI_IL_NUMERO);
 		switch(choice) {
 		
 		case 1:
@@ -249,7 +248,7 @@ public class UserView {
 			
 		case 3:
 			stay = false;
-			System.out.println("Uscendo...");
+			System.out.println(EXIT);
 			break;
 			
 		
