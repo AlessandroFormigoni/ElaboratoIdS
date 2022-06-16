@@ -11,15 +11,6 @@ public class Configuratore extends Utente {
 		this.authorization = true;
 	}
 	
-	public Categoria creaCategoria(String nomeCategoria) {
-		
-		return null;
-	}
-	
-	public Categoria modificaCategoria() {
-		return null;
-	}
-	
 	public void cambiaCredenziali() {
 		this.nome = InputDati.leggiStringaNonVuota("Inserisci il tuo nuovo nickname: ");
 		this.password = InputDati.leggiStringaNonVuota("Inserisci la tua nuova password: ");
