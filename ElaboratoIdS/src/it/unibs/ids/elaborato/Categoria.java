@@ -53,7 +53,7 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 		this.genitore=genitore;
 		this.genitore.sottoCategorie.add(this);
 		sottoCategorie = new TreeSet<>();
-		campi = new HashSet<>();
+		campi = genitore.getSetCampi();
 		creaMappa();
 	}
 	
@@ -278,11 +278,11 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
         return super.clone();
     }
 	
-	public Set<Campo> getSetCampi(){
+	public HashSet<Campo> getSetCampi(){
 		return this.campi;
 	}
 	public List<Campo> getListaCampi(){
 		return new ArrayList<Campo>(this.campi);
 	}
-
+	
 }

@@ -101,7 +101,8 @@ public class UserView {
 		do {
 			System.out.println("1. Visualizza dettagli appuntamenti");
 			System.out.println("2. Visualizza categorie");
-			System.out.println("3. Esegui logout");
+			System.out.println("3. Pubblica Articolo");
+			System.out.println("4. Esegui logout");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch(choice) {
 				case 1:
@@ -110,7 +111,10 @@ public class UserView {
 				case 2:
 					printCategorie();
 					break;
-				case 3:
+				case 3: 
+					pubblicaArticolo();
+					break;
+				case 4:
 					logoutView();
 					stay = false;
 					break;
@@ -254,5 +258,25 @@ public class UserView {
 		
 		}
 		}while(stay);
+	}
+	
+	public void pubblicaArticolo() {
+		for(Categoria c  : categoryController.getCategorie()) {
+			if(!c.hasSottoCategorie()) System.out.println(CategoriaStringheFormattate.percorso(c));
+		}
+		String catSelezionata = InputDati.leggiStringaNonVuota("Inserisci la Categoria a cui appartiene l'Articolo: ");
+		Articolo nuovoArt = categoryController.creaArticolo(catSelezionata, currentUser);
+		System.out.println(CategoriaStringheFormattate.campiFormattati(nuovoArt.getCategoriaArticolo()));
+		System.out.println("Adesso devi compilare i campi obbligatori");
+		for(Campo campo : nuovoArt.getCategoriaArticolo().getSetCampi()) {
+			if(campo.isMandatory()) {
+				System.out.print(campo.getNome()+": "+campo.getDescrizione());
+				campo.setDescrizione(InputDati.leggiStringaNonVuota("Modifica la descrizione del campo obbligatorio: "));
+			}
+		}
+		while(InputDati.yesOrNo("Vuoi modificare un altro campo?")) {
+			String daModificare = InputDati.leggiStringaNonVuota("Inserire Campo da modificare: ");
+			nuovoArt.getCategoriaArticolo().trovaCampoPerNome(daModificare).setDescrizione(InputDati.leggiStringaNonVuota("Inserire nuova descrizione: "));
+		}
 	}
 }

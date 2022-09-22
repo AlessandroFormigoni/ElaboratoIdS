@@ -85,5 +85,12 @@ private List<Categoria> listaCategorie;
 	public void setCategorie(List<Categoria> listaCategorie) {
 		this.listaCategorie = listaCategorie;
 	}
+	
+	public Articolo creaArticolo(String foglia, Utente utente) {
+	
+		if(!getCategoria(foglia).hasSottoCategorie()) return new Articolo(getCategoria(foglia), StatiOfferta.APERTA, utente);
+		else return null;
+		
+	}
 
 }
