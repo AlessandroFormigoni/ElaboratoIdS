@@ -99,5 +99,24 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 			e.printStackTrace();
 		} return null;
 	}
+	
+	public Articolo getArticolo(String nome, Utente creatore) {
+		for(Articolo art : articoli) {
+			if(art.getNomeArticolo().equals(nome) && art.getCreatore().getName().equals(creatore.getName())) return art;
+		}
+		return null;
+	}
+	
+	public void ritiraOfferta(String daRitirare, Utente creatore){
+		if(getArticolo(daRitirare, creatore).getStatoOfferta()!=StatiOfferta.RITIRATA) getArticolo(daRitirare, creatore).ritiraOfferta();
+	}
+	
+	public List<Articolo> offerteAttive(Utente creatore){
+		List<Articolo> offerte = new ArrayList<>();
+		for(Articolo art : articoli) {
+			if(art.getCreatore().equals(creatore)) offerte.add(art);
+		}
+		return offerte;
+	}
 
 }

@@ -66,7 +66,8 @@ public class UserView {
 			System.out.println("2. Modifica categoria");
 			System.out.println("3. Mostra categorie");
 			System.out.println("4. Crea nuovo appuntamento");
-			System.out.println("5. Esegui logout");
+			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
+			System.out.println("6. Esegui logout");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch (choice) {
 				case 1:
@@ -82,6 +83,9 @@ public class UserView {
 					appointmentView.makeAppointment(appointmentController);
 					break;
 				case 5:
+					visualizzaOfferteFoglia();
+					break;
+				case 6:
 					stay = false;
 					logoutView();
 					break;
@@ -102,7 +106,10 @@ public class UserView {
 			System.out.println("1. Visualizza dettagli appuntamenti");
 			System.out.println("2. Visualizza categorie");
 			System.out.println("3. Pubblica Articolo");
-			System.out.println("4. Esegui logout");
+			System.out.println("4. Visuallizza le tue Offerte");
+			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
+			System.out.println("6. Ritira un'Offerta");
+			System.out.println("7. Esegui logout");
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch(choice) {
 				case 1:
@@ -115,6 +122,15 @@ public class UserView {
 					pubblicaArticolo();
 					break;
 				case 4:
+					visuallizzaOfferte();
+					break;
+				case 5:
+					visualizzaOfferteFoglia();
+					break;
+				case 6:
+					ritiraOfferta();
+					break;
+				case 7:
 					logoutView();
 					stay = false;
 					break;
@@ -280,5 +296,40 @@ public class UserView {
 			String daModificare = InputDati.leggiStringaNonVuota("Inserire Campo da modificare: ");
 			nuovoArt.getCategoriaArticolo().trovaCampoPerNome(daModificare).setDescrizione(InputDati.leggiStringaNonVuota("Inserire nuova descrizione: "));
 		}
+	}
+	
+	public void visuallizzaOfferte() {
+		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
+			for(Articolo art : categoryController.offerteAttive(currentUser)) {
+			System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta());
+			}
+		}
+		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
+	}
+	
+	public void visualizzaOfferteFoglia() {
+		
+		for(Categoria c : categoryController.getCategorie()) {
+			CategoriaStringheFormattate.categoriaConDescr(c);
+		}
+		System.out.println();
+		String catSelezionata = InputDati.leggiStringaNonVuota("Inserire il nome della categoria di cui si vuole esplorare gli articoli: ");
+		Categoria foglia = categoryController.getCategoria(catSelezionata);
+		if(!foglia.hasSottoCategorie()) {
+			for(Articolo art : categoryController.articoli) {
+			if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()))
+				System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta()+" pubblicato da: "+art.getCreatore());
+			}
+		}
+	}
+	
+	public void ritiraOfferta() {
+		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
+			visuallizzaOfferte();
+			String nomeArticolo = InputDati.leggiStringaNonVuota("Inserire il nome dell'Offerta da ritirare: ");
+			categoryController.ritiraOfferta(nomeArticolo, currentUser);
+			System.out.println("Offerta ritirata con successo");
+		}
+		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
 	}
 }
