@@ -1,7 +1,7 @@
 package it.unibs.ids.elaborato;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Main {
 

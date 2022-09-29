@@ -275,7 +275,9 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	}
 	
 	public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+		Categoria cat = null;
+		cat = (Categoria) super.clone();
+		return cat;
     }
 	
 	public Set<Campo> getSetCampi(){

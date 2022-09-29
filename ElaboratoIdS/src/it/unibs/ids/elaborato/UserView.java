@@ -285,7 +285,7 @@ public class UserView {
 		Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
 		System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
 		System.out.println("Adesso devi compilare i campi obbligatori");
-		for(Campo campo : nuovoArt.getCategoriaArticolo().getTuttiCampi()) {
+		for(Campo campo : nuovoArt.getCampiArticolo()) {
 			if(campo.isMandatory()) {
 				System.out.println(campo.getNome()+": "+campo.getDescrizione());
 				campo.setDescrizione(InputDati.leggiStringaNonVuota("Modifica la descrizione del campo obbligatorio: "));

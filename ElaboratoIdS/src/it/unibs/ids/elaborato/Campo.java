@@ -4,9 +4,9 @@ package it.unibs.ids.elaborato;
  * classe usata per descrivere un campo di una categoria
  * */
 
-public class Campo {
+public class Campo implements Cloneable{
 	
-	public static final String DA_COMPILARE= "è obbligatorio compilare questo campo";
+	public static final String DA_COMPILARE= "ï¿½ obbligatorio compilare questo campo";
 	
 	private String nome;
 	private String descrizione;
@@ -67,5 +67,9 @@ public class Campo {
 		
 	}
 	
+	public Campo clone() throws CloneNotSupportedException{
+		return new Campo(new String(this.nome), new String(this.descrizione), this.modificabile, this.mandatory);
+		
+	}
 	
 }

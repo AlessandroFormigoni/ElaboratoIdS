@@ -51,13 +51,16 @@ public class ArticoloReader {
 					case "articolo":
 						String nome = xmlr.getAttributeValue(0);
 						Categoria cat = cc.getCategoria(xmlr.getAttributeValue(1));
+						List<Campo> campi = new ArrayList<>();
 						int num = xmlr.getAttributeCount();
-						for(int i=1; i<(num-3); i += 2) {
-							cat.modificaCampo(cat.trovaCampoPerNome(xmlr.getAttributeValue(i)), xmlr.getAttributeValue(i), xmlr.getAttributeValue(i+1), cat.trovaCampoPerNome(xmlr.getAttributeValue(i)).isModificabile());
+						for(int i=2; i<(num-2); i += 2) {
+							campi.add(new Campo(xmlr.getAttributeValue(i), xmlr.getAttributeValue(i+1), cat.trovaCampoPerNome(xmlr.getAttributeValue(i)).isModificabile(), cat.trovaCampoPerNome(xmlr.getAttributeValue(i)).isMandatory()));
 						}
 						StatiOfferta so = StatiOfferta.valueOf(xmlr.getAttributeValue(xmlr.getAttributeCount()-2).toUpperCase());
 						Utente user = uc.getUser(xmlr.getAttributeValue(xmlr.getAttributeCount()-1));
-						articoli.add(new Articolo(nome, cat, so, user));
+						Articolo articolo = new Articolo(nome, cat, so, user);
+						articolo.setCampiArticolo(campi);
+						articoli.add(articolo);
 					}
 					break;
 				 case XMLStreamConstants.END_ELEMENT:

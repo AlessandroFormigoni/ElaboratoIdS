@@ -33,7 +33,7 @@ public class WriteArticoli {
 				xmlw.writeAttribute("nome", art.getNomeArticolo());
 				xmlw.writeAttribute("categoria", art.getCategoriaArticolo().getNomeCategoria());
 				int i = 0;
-				for(Campo cam : art.getCategoriaArticolo().getTuttiCampi()) {
+				for(Campo cam : art.getCampiArticolo()) {
 					xmlw.writeAttribute("campo"+i, cam.getNome());
 					xmlw.writeAttribute("descrCampo"+i, cam.getDescrizione());
 					i++;

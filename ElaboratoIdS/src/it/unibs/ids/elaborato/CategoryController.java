@@ -89,13 +89,12 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 	
 	public Articolo creaArticolo(String nome, String foglia, Utente utente) {
 		try {
-			Categoria catFoglia = (Categoria) getCategoria(foglia).clone();
+			Categoria catFoglia = getCategoria(foglia);
 		Articolo art = new Articolo(nome, catFoglia, StatiOfferta.APERTA, utente);
-		listaCategorie.add(catFoglia);
 		articoli.add(art);
 		if(!getCategoria(foglia).hasSottoCategorie()) return art;
 		else return null;
-		} catch (CloneNotSupportedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} return null;
 	}
