@@ -25,16 +25,17 @@ public class WriteArticoli {
 	
 	public static void writeArticoli(List<Articolo> articoli) {
 		try {
-			xmlw.writeStartDocument();
 			xmlw.writeStartElement("articoli");
 			for(Articolo art : articoli) {
 				try {
 				
 				xmlw.writeStartElement("articolo");
 				xmlw.writeAttribute("categoria", art.getCategoriaArticolo().getNomeCategoria());
-				for(Campo cam : art.getCategoriaArticolo().getListaCampi()) {
-					xmlw.writeAttribute("campo", cam.getNome());
-					xmlw.writeAttribute("descrCampo", cam.getDescrizione());
+				int i = 0;
+				for(Campo cam : art.getCategoriaArticolo().getTuttiCampi()) {
+					xmlw.writeAttribute("campo"+i, cam.getNome());
+					xmlw.writeAttribute("descrCampo"+i, cam.getDescrizione());
+					i++;
 				}
 				xmlw.writeAttribute("statoOfferta", art.getStatoOfferta().name());
 				xmlw.writeAttribute("creatore", art.getCreatore().getName());
@@ -42,7 +43,7 @@ public class WriteArticoli {
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				
+				xmlw.writeEndElement();
 			}
 			xmlw.writeEndElement();
 			xmlw.flush();

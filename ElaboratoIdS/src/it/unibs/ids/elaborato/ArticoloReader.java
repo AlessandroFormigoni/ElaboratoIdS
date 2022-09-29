@@ -49,12 +49,13 @@ public class ArticoloReader {
 					case "articoli":
 						break;
 					case "articolo":
-						Categoria cat = cc.getCategoria(xmlr.getAttributeLocalName(0));
-						for(int i=1; i<xmlr.getAttributeCount()-2; i++) {
-							cat.modificaCampo(cat.trovaCampoPerNome(xmlr.getAttributeLocalName(i)), xmlr.getAttributeLocalName(i), xmlr.getAttributeLocalName(i+1), cat.trovaCampoPerNome(xmlr.getAttributeLocalName(i)).isModificabile());
+						Categoria cat = cc.getCategoria(xmlr.getAttributeValue(0));
+						int num = xmlr.getAttributeCount();
+						for(int i=1; i<(num-3); i += 2) {
+							cat.modificaCampo(cat.trovaCampoPerNome(xmlr.getAttributeValue(i)), xmlr.getAttributeValue(i), xmlr.getAttributeValue(i+1), cat.trovaCampoPerNome(xmlr.getAttributeValue(i)).isModificabile());
 						}
-						StatiOfferta so = StatiOfferta.valueOf(xmlr.getAttributeLocalName(xmlr.getAttributeCount()-1));
-						Utente user = uc.userLogin(xmlr.getAttributeLocalName(xmlr.getAttributeCount()));
+						StatiOfferta so = StatiOfferta.valueOf(xmlr.getAttributeValue(xmlr.getAttributeCount()-2).toUpperCase());
+						Utente user = uc.getUser(xmlr.getAttributeValue(xmlr.getAttributeCount()-1));
 						articoli.add(new Articolo(cat, so, user));
 					}
 					break;

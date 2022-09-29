@@ -65,7 +65,7 @@ public class UserController {
 		loggedUsers.remove(utente);
 	}
 	
-	private Utente getUser(String username) {
+	protected Utente getUser(String username) {
 		for(Utente u : listaUtenti) {
 			if (u.getName().equals(username)) return u;
 		}

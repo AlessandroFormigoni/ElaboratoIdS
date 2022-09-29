@@ -52,8 +52,8 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 		this.root=false;
 		this.genitore=genitore;
 		this.genitore.sottoCategorie.add(this);
+		campi = new HashSet<>();
 		sottoCategorie = new TreeSet<>();
-		campi = genitore.getSetCampi();
 		creaMappa();
 	}
 	
@@ -97,7 +97,7 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	
 	//case sensitive
 	public Campo trovaCampoPerNome(String nomeCampoDaTrovare) {
-		for(Campo c : campi) {
+		for(Campo c : getTuttiCampi()) {
 			if(c.getNome().equals(nomeCampoDaTrovare)) return c;
 		}
 		return null;
@@ -278,11 +278,24 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
         return super.clone();
     }
 	
-	public HashSet<Campo> getSetCampi(){
+	public Set<Campo> getSetCampi(){
 		return this.campi;
 	}
 	public List<Campo> getListaCampi(){
 		return new ArrayList<Campo>(this.campi);
+	}
+	
+	public List<Campo> getTuttiCampi() {
+		ArrayList<Campo> campi = new ArrayList<>();
+		campi.addAll(getListaCampi());
+		
+		Categoria g = this.genitore;
+		while(!g.isRoot()) {
+			campi.addAll(genitore.getListaCampi());
+			g = g.genitore;
+		}
+		campi.addAll(g.getListaCampi());
+		return campi;
 	}
 	
 }
