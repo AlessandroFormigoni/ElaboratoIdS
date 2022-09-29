@@ -30,6 +30,7 @@ public class WriteArticoli {
 				try {
 				
 				xmlw.writeStartElement("articolo");
+				xmlw.writeAttribute("nome", art.getNomeArticolo());
 				xmlw.writeAttribute("categoria", art.getCategoriaArticolo().getNomeCategoria());
 				int i = 0;
 				for(Campo cam : art.getCategoriaArticolo().getTuttiCampi()) {

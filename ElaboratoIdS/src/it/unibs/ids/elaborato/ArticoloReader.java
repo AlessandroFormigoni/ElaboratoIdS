@@ -49,14 +49,15 @@ public class ArticoloReader {
 					case "articoli":
 						break;
 					case "articolo":
-						Categoria cat = cc.getCategoria(xmlr.getAttributeValue(0));
+						String nome = xmlr.getAttributeValue(0);
+						Categoria cat = cc.getCategoria(xmlr.getAttributeValue(1));
 						int num = xmlr.getAttributeCount();
 						for(int i=1; i<(num-3); i += 2) {
 							cat.modificaCampo(cat.trovaCampoPerNome(xmlr.getAttributeValue(i)), xmlr.getAttributeValue(i), xmlr.getAttributeValue(i+1), cat.trovaCampoPerNome(xmlr.getAttributeValue(i)).isModificabile());
 						}
 						StatiOfferta so = StatiOfferta.valueOf(xmlr.getAttributeValue(xmlr.getAttributeCount()-2).toUpperCase());
 						Utente user = uc.getUser(xmlr.getAttributeValue(xmlr.getAttributeCount()-1));
-						articoli.add(new Articolo(cat, so, user));
+						articoli.add(new Articolo(nome, cat, so, user));
 					}
 					break;
 				 case XMLStreamConstants.END_ELEMENT:

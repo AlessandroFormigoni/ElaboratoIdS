@@ -87,10 +87,10 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		this.listaCategorie = listaCategorie;
 	}
 	
-	public Articolo creaArticolo(String foglia, Utente utente) {
+	public Articolo creaArticolo(String nome, String foglia, Utente utente) {
 		try {
 			Categoria catFoglia = (Categoria) getCategoria(foglia).clone();
-		Articolo art = new Articolo(catFoglia, StatiOfferta.APERTA, utente);
+		Articolo art = new Articolo(nome, catFoglia, StatiOfferta.APERTA, utente);
 		listaCategorie.add(catFoglia);
 		articoli.add(art);
 		if(!getCategoria(foglia).hasSottoCategorie()) return art;

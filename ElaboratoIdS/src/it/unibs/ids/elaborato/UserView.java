@@ -265,7 +265,8 @@ public class UserView {
 			if(!c.hasSottoCategorie()) System.out.println(CategoriaStringheFormattate.percorso(c));
 		}
 		String catSelezionata = InputDati.leggiStringaNonVuota("Inserisci la Categoria a cui appartiene l'Articolo: ");
-		Articolo nuovoArt = categoryController.creaArticolo(catSelezionata, currentUser);
+		String nomeArticolo = InputDati.leggiStringaNonVuota("Inserisci il nome del tuo Articolo: ");
+		Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
 		System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
 		System.out.println("Adesso devi compilare i campi obbligatori");
 		for(Campo campo : nuovoArt.getCategoriaArticolo().getTuttiCampi()) {
