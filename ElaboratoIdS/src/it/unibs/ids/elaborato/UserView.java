@@ -275,6 +275,7 @@ public class UserView {
 			}
 		}
 		while(InputDati.yesOrNo("Vuoi modificare un altro campo?")) {
+			System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
 			String daModificare = InputDati.leggiStringaNonVuota("Inserire Campo da modificare: ");
 			nuovoArt.getCategoriaArticolo().trovaCampoPerNome(daModificare).setDescrizione(InputDati.leggiStringaNonVuota("Inserire nuova descrizione: "));
 		}
