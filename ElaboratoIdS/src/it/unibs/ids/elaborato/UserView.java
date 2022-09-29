@@ -270,7 +270,7 @@ public class UserView {
 		System.out.println("Adesso devi compilare i campi obbligatori");
 		for(Campo campo : nuovoArt.getCategoriaArticolo().getSetCampi()) {
 			if(campo.isMandatory()) {
-				System.out.print(campo.getNome()+": "+campo.getDescrizione());
+				System.out.println(campo.getNome()+": "+campo.getDescrizione());
 				campo.setDescrizione(InputDati.leggiStringaNonVuota("Modifica la descrizione del campo obbligatorio: "));
 			}
 		}
