@@ -5,6 +5,7 @@ import java.util.*;
 
 public class CategoryController {
 private List<Categoria> listaCategorie;
+public ArrayList<Articolo> articoli = new ArrayList<>();
 	
 	public CategoryController() {
 		this.listaCategorie = new ArrayList<>();
@@ -87,10 +88,16 @@ private List<Categoria> listaCategorie;
 	}
 	
 	public Articolo creaArticolo(String foglia, Utente utente) {
-	
-		if(!getCategoria(foglia).hasSottoCategorie()) return new Articolo(getCategoria(foglia), StatiOfferta.APERTA, utente);
+		try {
+			Categoria catFoglia = (Categoria) getCategoria(foglia).clone();
+		Articolo art = new Articolo(catFoglia, StatiOfferta.APERTA, utente);
+		listaCategorie.add(catFoglia);
+		articoli.add(art);
+		if(!getCategoria(foglia).hasSottoCategorie()) return art;
 		else return null;
-		
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		} return null;
 	}
 
 }
