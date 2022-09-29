@@ -310,7 +310,7 @@ public class UserView {
 	public void visualizzaOfferteFoglia() {
 		
 		for(Categoria c : categoryController.getCategorie()) {
-			CategoriaStringheFormattate.categoriaConDescr(c);
+			System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
 		}
 		System.out.println();
 		String catSelezionata = InputDati.leggiStringaNonVuota("Inserire il nome della categoria di cui si vuole esplorare gli articoli: ");
@@ -318,7 +318,7 @@ public class UserView {
 		if(!foglia.hasSottoCategorie()) {
 			for(Articolo art : categoryController.articoli) {
 			if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()))
-				System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta()+" pubblicato da: "+art.getCreatore());
+				System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta()+" pubblicato da: "+art.getCreatore().getName());
 			}
 		}
 	}
