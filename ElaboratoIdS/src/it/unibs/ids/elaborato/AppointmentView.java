@@ -5,7 +5,7 @@ import java.util.*;
 import it.unibs.fp.mylib.InputDati;
 
 public class AppointmentView {
-	
+	//|| (floatSeparator(orari).size()%2) != 0
 	private static final String SEPARATORE = "-------------------------";
 	private static final float timeUpperLimit = 23.599999999999f;
 	private static final float minutesUpperLimit = 0.599999999999f;
@@ -20,9 +20,9 @@ public class AppointmentView {
 		} while(!containsGiorno(giorni));
 		String orari;
 		do {
-		orari = InputDati.leggiStringaNonVuota("Inserisci gli intervalli orari, nel formato xx.yy, separati da una virgola: ");
-		} while(isValidTime(orari) || (floatSeparator(orari).size()%2) != 0);
-		ac.creaAppuntamento(piazza, stringSeparator(luoghi), stringSeparator(giorni), floatSeparator(orari));
+		orari = InputDati.leggiStringaNonVuota("Inserisci gli intervalli orari, nel formato xx.yy-xx.yy, separati da una virgola: ");
+		} while(isValidTime(creaOrari(orari)));
+		ac.creaAppuntamento(piazza, stringSeparator(luoghi), stringSeparator(giorni), creaOrari(orari));
 	}
 	
 	public void viewAppointments(AppointmentController ac) {
@@ -31,7 +31,7 @@ public class AppointmentView {
 			System.out.println("Piazza: " + a.getPiazza());
 			System.out.println("Luoghi: " + a.getLuoghi());
 			System.out.println("Giorni: " + a.getGiorni());
-			System.out.println("Orari: " + a.getIntervalliOrari());
+			System.out.println("Orari: " + stampaOrari(a));
 		});
 		System.out.println(SEPARATORE);
 	}
@@ -45,6 +45,22 @@ public class AppointmentView {
 		List<Float> list = new ArrayList<>();
 		stringSeparator(input).stream().forEach(f -> list.add(Float.parseFloat(f)));
 		return list;
+	}
+	
+	public List<Float[]> creaOrari(String input){
+		List<Float[]> orari = new ArrayList<>();
+		List<String> list = new ArrayList<>();
+		
+		for(String s : stringSeparator(input)) {
+			list = Arrays.asList(s.split("-"));
+				float inizio = Float.valueOf(list.get(0));
+				float fine = Float.valueOf(list.get(1));
+				Float[] intervallo = {inizio, fine};
+				orari.add(intervallo);
+		}
+		
+		
+		return orari;
 	}
 	
 	private boolean containsGiorno(String input) {
@@ -68,4 +84,28 @@ public class AppointmentView {
 		}
 		return false;
 	}
+	private boolean isValidTime(List<Float[]> input) {
+		for(Float[] f : input) {
+			for(int i=0;i<f.length;i++) {
+				if(f[i].floatValue()<0.0f || f[i].floatValue()>timeUpperLimit || (f[i].floatValue() % 1)>minutesUpperLimit) {
+					System.out.println("Errore di input: Orario digitato invalido");
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private String stampaOrari(ConfAppointment ca) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		for(Float[] f : ca.getIntervalliOrari()) {
+			sb.append(f[0]+"-"+f[1]);
+			if(ca.getIntervalliOrari().indexOf(f)!=ca.getIntervalliOrari().size()-1) sb.append(", ");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+	
 }

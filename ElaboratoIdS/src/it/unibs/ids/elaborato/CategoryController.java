@@ -117,5 +117,12 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		}
 		return offerte;
 	}
+	
+	public boolean categoryHasArticoli(Categoria cat){
+		for(Articolo art : articoli) {
+			if(art.getCategoriaArticolo().equals(cat)) return true;
+		}
+		return false;
+	}
 
 }

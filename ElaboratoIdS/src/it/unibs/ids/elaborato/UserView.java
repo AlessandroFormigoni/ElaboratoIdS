@@ -62,12 +62,14 @@ public class UserView {
 		System.out.println("Benvenuto configuratore " + currentUser.nome + " queste sono le tue funzionalita: ");
 		boolean stay = true;
 		do {
-			System.out.println("1. Crea categoria");
+			System.out.println();
+			System.out.println("1. Crea categoria radice");
 			System.out.println("2. Modifica categoria");
 			System.out.println("3. Mostra categorie");
 			System.out.println("4. Crea nuovo appuntamento");
 			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
 			System.out.println("6. Esegui logout");
+			System.out.println();
 			int choice = InputDati.leggiIntero("Inserisci numero: ");
 			switch (choice) {
 				case 1:
@@ -83,7 +85,7 @@ public class UserView {
 					appointmentView.makeAppointment(appointmentController);
 					break;
 				case 5:
-					visualizzaOfferteFoglia();
+					visualizzaOfferteAperteFoglia();
 					break;
 				case 6:
 					stay = false;
@@ -103,6 +105,7 @@ public class UserView {
 		System.out.println("Benvenuto fruitore " + currentUser.nome + " queste sono le tue funzionalita: ");
 		boolean stay = true;
 		do {
+			System.out.println();
 			System.out.println("1. Visualizza dettagli appuntamenti");
 			System.out.println("2. Visualizza categorie");
 			System.out.println("3. Pubblica Articolo");
@@ -110,7 +113,7 @@ public class UserView {
 			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
 			System.out.println("6. Ritira un'Offerta");
 			System.out.println("7. Esegui logout");
-			int choice = InputDati.leggiIntero("Inserisci numero: ");
+			int choice = InputDati.leggiIntero("\nInserisci numero: ");
 			switch(choice) {
 				case 1:
 					appointmentView.viewAppointments(appointmentController);
@@ -125,7 +128,7 @@ public class UserView {
 					visuallizzaOfferte();
 					break;
 				case 5:
-					visualizzaOfferteFoglia();
+					visualizzaOfferteAperteFoglia();
 					break;
 				case 6:
 					ritiraOfferta();
@@ -166,9 +169,6 @@ public class UserView {
 		String nome = InputDati.leggiStringaNonVuota("Per creare una nuova categoria, inserisci un nome: ");
 		String desc = InputDati.leggiStringaNonVuota("Inserisci ora una breve descrizione: ");
 		categoryController.aggiungiNuovaCategoria(nome, desc);
-		String statoDiConservazione = InputDati.leggiStringaNonVuota("Inserisci lo stato di conservazione: ");
-		String descrizioneLibera = InputDati.leggiStringaNonVuota("Inserisci descrizione libera: ");
-		categoryController.setCampiNativi(categoryController.getCategoria(nome), descrizioneLibera, statoDiConservazione);
 	}
 	
 	private void modificaCategoriaView() {
@@ -276,29 +276,24 @@ public class UserView {
 		}while(stay);
 	}
 	
-	public void pubblicaArticolo() {
+	private void pubblicaArticolo() {
 		for(Categoria c  : categoryController.getCategorie()) {
 			if(!c.hasSottoCategorie()) System.out.println(CategoriaStringheFormattate.percorso(c));
 		}
-		String catSelezionata = InputDati.leggiStringaNonVuota("Inserisci la Categoria a cui appartiene l'Articolo: ");
-		String nomeArticolo = InputDati.leggiStringaNonVuota("Inserisci il nome del tuo Articolo: ");
-		Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
-		System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
-		System.out.println("Adesso devi compilare i campi obbligatori");
-		for(Campo campo : nuovoArt.getCampiArticolo()) {
-			if(campo.isMandatory()) {
-				System.out.println(campo.getNome()+": "+campo.getDescrizione());
-				campo.setDescrizione(InputDati.leggiStringaNonVuota("Modifica la descrizione del campo obbligatorio: "));
-			}
-		}
-		while(InputDati.yesOrNo("Vuoi modificare un altro campo?")) {
+		String catSelezionata = leggiCategoria("a cui appartiene l'Articolo: ");
+		if(catSelezionata!=null) {
+			String nomeArticolo = InputDati.leggiStringaNonVuota("Inserisci il nome del tuo Articolo: ");
+			Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
 			System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
-			String daModificare = InputDati.leggiStringaNonVuota("Inserire Campo da modificare: ");
-			nuovoArt.getCategoriaArticolo().trovaCampoPerNome(daModificare).setDescrizione(InputDati.leggiStringaNonVuota("Inserire nuova descrizione: "));
+			modificaCampi(nuovoArt);
+		}
+		else {
+			System.out.println("Operazione annullata");
 		}
 	}
 	
-	public void visuallizzaOfferte() {
+	private void visuallizzaOfferte() {
+		System.out.println(SEPARATORE);
 		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
 			for(Articolo art : categoryController.offerteAttive(currentUser)) {
 			System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta());
@@ -307,29 +302,118 @@ public class UserView {
 		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
 	}
 	
-	public void visualizzaOfferteFoglia() {
-		
+	private void visualizzaOfferteAperteFoglia() {
+		System.out.println(SEPARATORE);
 		for(Categoria c : categoryController.getCategorie()) {
-			System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
+			if(!c.hasSottoCategorie())System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
 		}
 		System.out.println();
-		String catSelezionata = InputDati.leggiStringaNonVuota("Inserire il nome della categoria di cui si vuole esplorare gli articoli: ");
-		Categoria foglia = categoryController.getCategoria(catSelezionata);
-		if(!foglia.hasSottoCategorie()) {
-			for(Articolo art : categoryController.articoli) {
-			if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()))
-				System.out.println(art.getNomeArticolo()+" stato dell'offerta: "+art.getStatoOfferta()+" pubblicato da: "+art.getCreatore().getName());
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			String catSelezionata = leggiCategoria("Inserire Categoria di cui si vuole esplorare gli articoli: ");
+			if(catSelezionata!=null) {
+				Categoria foglia = categoryController.getCategoria(catSelezionata);
+				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {
+					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria());
+					for(Articolo art : categoryController.articoli) {
+						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA))
+							System.out.println(art.getNomeArticolo()+" pubblicato da "+art.getCreatore().getName());
+						}
+					}
+				else {
+					System.out.println("La Categoria inserita non è valida!");
+					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+					else tryAgain=false;
+					}
 			}
+		}while(tryAgain);
+		
+		
+			
+	}
+	
+	private void ritiraOfferta() {
+		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
+			visuallizzaOfferte();
+			String nomeArticolo = leggiArticolo("Inserire l'Articolo da ritirare: ");
+			if(nomeArticolo!=null){
+				categoryController.ritiraOfferta(nomeArticolo, currentUser);
+				System.out.println("Offerta ritirata con successo");
+			}
+			else System.out.println("Operazione annullata");
+			
+		}
+		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
+	}
+	
+	private void modificaCampi(Articolo art) {
+		System.out.println("Adesso devi compilare i campi obbligatori");
+		for(Campo campo : art.getCampiArticolo()) {
+			if(campo.isMandatory()) {
+				System.out.println(campo.getNome()+": "+campo.getDescrizione());
+				campo.setDescrizione(InputDati.leggiStringaNonVuota("Modifica la descrizione del campo obbligatorio: "));
+			}
+		}
+		while(InputDati.yesOrNo("Vuoi modificare un altro campo?")) {
+			for(Campo c : art.getCampiArticolo()) {
+				System.out.println(c.getNome()+": "+c.getDescrizione());
+			}
+			String daModificare = leggiCampo(art);
+			if(daModificare!=null)art.getCampoFromNome(daModificare).setDescrizione(InputDati.leggiStringaNonVuota("Inserire nuova descrizione: "));
 		}
 	}
 	
-	public void ritiraOfferta() {
-		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
-			visuallizzaOfferte();
-			String nomeArticolo = InputDati.leggiStringaNonVuota("Inserire il nome dell'Offerta da ritirare: ");
-			categoryController.ritiraOfferta(nomeArticolo, currentUser);
-			System.out.println("Offerta ritirata con successo");
-		}
-		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
+	private String leggiCategoria(String messaggio) {
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			try {
+				return categoryController.getCategoria(InputDati.leggiStringaNonVuota(messaggio)).getNomeCategoria();
+			}
+			catch(Exception e) {
+				System.out.println("La Categoria inserita non è valida!");
+				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+				else tryAgain=false;
+			}
+		}while(tryAgain);
+		return null;
+	}
+	
+	private String leggiCampo(Articolo articolo) {
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			try {
+				return articolo.getCampoFromNome(InputDati.leggiStringaNonVuota("Inserire Campo: ")).getNome();
+			}
+			catch(Exception e) {
+				System.out.println("Il Campo inserito non è valido!");
+				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+				else tryAgain=false;
+			}
+		}while(tryAgain);
+		return null;
+
+	}
+	
+	private String leggiArticolo(String messaggio) {
+		boolean tryAgain;
+		do {
+			tryAgain = false;
+			boolean errore = false;
+			String nomeArticolo = InputDati.leggiStringaNonVuota(messaggio);
+			for(Articolo art : categoryController.articoli) {
+				if(art.getNomeArticolo().equals(nomeArticolo)) return art.getNomeArticolo();
+				else errore = true;
+			 }
+			if(errore) {
+				System.out.println("L'Articolo inserito non è valido!");
+				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+				else tryAgain=false;
+			}
+			
+		}while(tryAgain);
+		return null;
 	}
 }

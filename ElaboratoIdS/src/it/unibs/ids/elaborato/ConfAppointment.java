@@ -5,18 +5,15 @@ import java.util.List;
 
 public class ConfAppointment {
 	
-	public static final float PRIMO = 17.00f;
-	public static final float ULTIMO = 19.30f;
 	public static final float IN_PUNTO = 0.0f;
 	public static final float MEZZA = 0.3f;
 	public static final float QUASI_MEZZA =0.29999f;
-	//public static final String[] GIORNI_SETTIMANA= {"lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato", "domenica"};
 	
 	
 	private String piazza;
 	private List<String> luoghi;
 	private List<String> giorni;
-	private List<Float> intervalliOrari;
+	private List<Float[]> intervalliOrari;
 	private int scadenza;
 	
 	ConfAppointment(String piazza){
@@ -51,11 +48,11 @@ public class ConfAppointment {
 		this.giorni = giorni;
 	}
 	
-	public List<Float> getIntervalliOrari() {
+	public List<Float[]> getIntervalliOrari() {
 		return intervalliOrari;
 	}
 	
-	public void setIntervalliOrari(List<Float> intervalliOrari) {
+	public void setIntervalliOrari(List<Float[]> intervalliOrari) {
 		this.intervalliOrari = intervalliOrari;
 	}
 	
@@ -67,11 +64,16 @@ public class ConfAppointment {
 		this.scadenza = scadenza;
 	}
 	
-	public void addIntervallo(float intervallo) {
-		int parteInt = (int)intervallo;
-		float daControllare = intervallo-parteInt;
-		if(PRIMO<=intervallo&&intervallo<=ULTIMO)
-		if((QUASI_MEZZA<=daControllare&&daControllare<=MEZZA)||daControllare==IN_PUNTO)intervalliOrari.add(intervallo);
+	public void addIntervallo(float inizio, float fine) {
+		int parteIntInizio = (int)inizio;
+		float daControllareInizio = inizio-parteIntInizio;
+		int parteIntFine = (int)fine;
+		float daControllareFine = fine-parteIntFine;
+		if((QUASI_MEZZA<=daControllareInizio&&daControllareInizio<=MEZZA)||daControllareInizio==IN_PUNTO)
+			if((QUASI_MEZZA<=daControllareFine&&daControllareFine<=MEZZA)||daControllareFine==IN_PUNTO) {
+				Float[] intervallo = {inizio, fine};
+				intervalliOrari.add(intervallo);
+			}
 		
 	}
 	

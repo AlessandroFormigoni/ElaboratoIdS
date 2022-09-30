@@ -8,7 +8,7 @@ public class AppointmentController {
 		this.appointmentList = new ArrayList<>();
 	}
 	
-	public void creaAppuntamento(String piazza, List<String> luoghi, List<String> giorni, List<Float> intervalliOrari) {
+	public void creaAppuntamento(String piazza, List<String> luoghi, List<String> giorni, List<Float[]> intervalliOrari) {
 		try {
 		ConfAppointment appuntamento = new ConfAppointment(piazza);
 		appuntamento.setLuoghi(luoghi);
@@ -28,8 +28,8 @@ public class AppointmentController {
 		getAppointment(piazza).addGiorno(luogo);
 	}
 	
-	public void addIntervallo(String piazza, float intervallo) {
-		getAppointment(piazza).addIntervallo(Float.valueOf(intervallo));
+	public void addIntervallo(String piazza, float inizio, float fine) {
+		getAppointment(piazza).addIntervallo(Float.valueOf(inizio), Float.valueOf(fine));
 	}
 	
 	public void setScadenza(String piazza, int scadenza) {
