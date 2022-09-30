@@ -5,7 +5,7 @@ import java.util.*;
 import it.unibs.fp.mylib.InputDati;
 
 public class AppointmentView {
-	//|| (floatSeparator(orari).size()%2) != 0
+	
 	private static final String SEPARATORE = "-------------------------";
 	private static final float timeUpperLimit = 23.599999999999f;
 	private static final float minutesUpperLimit = 0.599999999999f;
