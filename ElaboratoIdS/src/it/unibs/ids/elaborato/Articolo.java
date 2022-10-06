@@ -65,5 +65,9 @@ public class Articolo {
 		return null;
 	}
 	
+	public void changeStatoOfferta(StatiOfferta stato) {
+		this.statoOfferta = stato;
+	}
+	
 	
 }
