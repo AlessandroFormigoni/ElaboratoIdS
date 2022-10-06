@@ -4,9 +4,11 @@ import java.util.*;
 public class AppointmentController {
 	public static final long MILLISEC_GIORNO = 86400000;
 	private List<ConfAppointment> appointmentList;
+	private List<Offerta> offerteList;
 	
 	public AppointmentController() {
 		this.appointmentList = new ArrayList<>();
+		this.offerteList = new ArrayList<>();
 	}
 	
 	public void creaAppuntamento(String piazza, List<String> luoghi, List<String> giorni, List<Float[]> intervalliOrari) {
@@ -44,7 +46,7 @@ public class AppointmentController {
 		return this.appointmentList;
 	}
 	
-	public Offerta creaOfferta(long scadenza, Articolo artA, Articolo artB) {
+	public void creaOfferta(long scadenza, Articolo artA, Articolo artB) {
 		Calendar currentTime = Calendar.getInstance();
         
         for(int i=1; i<=scadenza; i++) {
@@ -52,6 +54,11 @@ public class AppointmentController {
 	        init += MILLISEC_GIORNO;
 	        currentTime.setTimeInMillis(init);
         }
-		return new Offerta(currentTime, artA, artB);	
-		}
+        Offerta nuova = new Offerta(currentTime, artA, artB);
+        this.offerteList.add(nuova);	
+	}
+	
+	public List<Offerta> getOfferteList(){
+		return this.offerteList;
+	}
 }

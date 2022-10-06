@@ -87,10 +87,9 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		this.listaCategorie = listaCategorie;
 	}
 	
-	public Articolo creaArticolo(String nome, String foglia, Utente utente) {
+	public Articolo creaArticolo(String nome, Categoria foglia, Utente utente) {
 		try {
-			Categoria catFoglia = getCategoria(foglia);
-		Articolo art = new Articolo(nome, catFoglia, StatiOfferta.APERTA, utente);
+		Articolo art = new Articolo(nome, foglia, StatiOfferta.APERTA, utente);
 		articoli.add(art);
 		if(!getCategoria(foglia).hasSottoCategorie()) return art;
 		else return null;
@@ -113,8 +112,8 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		return null;
 	}
 	
-	public void ritiraOfferta(String daRitirare, Utente creatore){
-		if(getArticolo(daRitirare, creatore).getStatoOfferta()!=StatiOfferta.RITIRATA) getArticolo(daRitirare, creatore).ritiraOfferta();
+	public void ritiraOfferta(Articolo daRitirare){
+		if(daRitirare.getStatoOfferta()!=StatiOfferta.RITIRATA) daRitirare.ritiraOfferta();
 	}
 	
 	public List<Articolo> offerteAttive(Utente creatore){
