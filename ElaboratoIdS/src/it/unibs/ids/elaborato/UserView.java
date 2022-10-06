@@ -1,6 +1,8 @@
 package it.unibs.ids.elaborato;
 
 
+import java.util.Calendar;
+
 import it.unibs.fp.mylib.InputDati;
 
 public class UserView {
@@ -112,7 +114,8 @@ public class UserView {
 			System.out.println("4. Visuallizza le tue Offerte");
 			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
 			System.out.println("6. Ritira un'Offerta");
-			System.out.println("7. Esegui logout");
+			System.out.println("7. Seleziona Offerta");
+			System.out.println("8. Esegui logout");
 			int choice = InputDati.leggiIntero("\nInserisci numero: ");
 			switch(choice) {
 				case 1:
@@ -125,7 +128,7 @@ public class UserView {
 					pubblicaArticolo();
 					break;
 				case 4:
-					visuallizzaOfferte();
+					visualizzaOfferte();
 					break;
 				case 5:
 					visualizzaOfferteAperteFoglia();
@@ -134,6 +137,9 @@ public class UserView {
 					ritiraOfferta();
 					break;
 				case 7:
+					selezionaOfferta();
+					break;
+				case 8:
 					logoutView();
 					stay = false;
 					break;
@@ -292,7 +298,7 @@ public class UserView {
 		}
 	}
 	
-	private void visuallizzaOfferte() {
+	private void visualizzaOfferte() {
 		System.out.println(SEPARATORE);
 		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
 			for(Articolo art : categoryController.offerteAttive(currentUser)) {
@@ -328,14 +334,42 @@ public class UserView {
 					}
 			}
 		}while(tryAgain);
-		
-		
-			
 	}
+	
+	private void visualizzaOfferteAutoreDiverso() {
+		System.out.println(SEPARATORE);
+		for(Categoria c : categoryController.getCategorie()) {
+			if(!c.hasSottoCategorie())System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
+		}
+		System.out.println();
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			String catSelezionata = leggiCategoria("Inserire Categoria di cui si vuole esplorare gli articoli: ");
+			if(catSelezionata!=null) {
+				Categoria foglia = categoryController.getCategoria(catSelezionata);
+				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {
+					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria());
+					for(Articolo art : categoryController.articoli) {
+						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA)&&art.getCreatore()!=currentUser)
+							System.out.println(art.getNomeArticolo()+" pubblicato da "+art.getCreatore().getName());
+						}
+					}
+				else {
+					System.out.println("La Categoria inserita non è valida!");
+					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+					else tryAgain=false;
+					}
+			}
+		}while(tryAgain);
+	}
+	
+	
+	
 	
 	private void ritiraOfferta() {
 		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
-			visuallizzaOfferte();
+			visualizzaOfferte();
 			String nomeArticolo = leggiArticolo("Inserire l'Articolo da ritirare: ");
 			if(nomeArticolo!=null){
 				categoryController.ritiraOfferta(nomeArticolo, currentUser);
@@ -415,5 +449,27 @@ public class UserView {
 			
 		}while(tryAgain);
 		return null;
+	}
+	
+	private void selezionaOfferta() {
+		System.out.println(SEPARATORE);
+		visualizzaOfferteAutoreDiverso();
+		Articolo artA = categoryController.getArticolo(leggiArticolo("Inserire un articolo che desideri: "));
+		visualizzaOfferte();
+		Articolo artB;
+		boolean tryAgain=false;
+		do {
+			artB = categoryController.getArticolo(leggiArticolo("Inserire un articolo da offrire: "));
+			if(artB.getStatoOfferta()!=StatiOfferta.APERTA) {
+				tryAgain = true;
+				System.out.println("Inserisci un articolo con stato offerta APERTA");
+			}
+			else tryAgain = false;
+		}while(tryAgain);
+		
+		long scadenza = InputDati.leggiInteroConMinimo("Inserire la scadenza dell'offerta: ", 1);
+		Offerta offerta = appointmentController.creaOfferta(scadenza, artA, artB);
+		System.out.println("Scadenza: " +offerta.getScadenza().get(Calendar.DATE)+"/"+offerta.getScadenza().get(Calendar.MONTH)+"/"+offerta.getScadenza().get(Calendar.YEAR));
+		
 	}
 }

@@ -32,6 +32,7 @@ public class AppointmentView {
 			System.out.println("Luoghi: " + a.getLuoghi());
 			System.out.println("Giorni: " + a.getGiorni());
 			System.out.println("Orari: " + stampaOrari(a));
+			System.out.println("Scadenza: " + a.getScadenza());
 		});
 		System.out.println(SEPARATORE);
 	}

@@ -99,6 +99,13 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		} return null;
 	}
 	
+	public Articolo getArticolo(String nome) {
+		for(Articolo art : articoli) {
+			if(art.getNomeArticolo().equals(nome)) return art;
+		}
+		return null;
+	}
+	
 	public Articolo getArticolo(String nome, Utente creatore) {
 		for(Articolo art : articoli) {
 			if(art.getNomeArticolo().equals(nome) && art.getCreatore().getName().equals(creatore.getName())) return art;

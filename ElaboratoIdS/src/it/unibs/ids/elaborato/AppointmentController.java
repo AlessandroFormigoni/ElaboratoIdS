@@ -2,6 +2,7 @@ package it.unibs.ids.elaborato;
 import java.util.*;
 
 public class AppointmentController {
+	public static final long MILLISEC_GIORNO = 86400000;
 	private List<ConfAppointment> appointmentList;
 	
 	public AppointmentController() {
@@ -42,4 +43,15 @@ public class AppointmentController {
 	public List<ConfAppointment> getAppuntamenti() {
 		return this.appointmentList;
 	}
+	
+	public Offerta creaOfferta(long scadenza, Articolo artA, Articolo artB) {
+		Calendar currentTime = Calendar.getInstance();
+        
+        for(int i=1; i<=scadenza; i++) {
+	        long init = currentTime.getTimeInMillis();
+	        init += MILLISEC_GIORNO;
+	        currentTime.setTimeInMillis(init);
+        }
+		return new Offerta(currentTime, artA, artB);	
+		}
 }
