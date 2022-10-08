@@ -322,10 +322,10 @@ public class UserView {
 			if(foglia!=null) {
 				System.out.println();
 				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {
-					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria());
+					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria()+"\n");
 					for(Articolo art : categoryController.articoli) {
 						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA))
-							System.out.println(art.getNomeArticolo()+" pubblicato da "+art.getCreatore().getName());
+							System.out.println("[Ariticolo]: "+art.getNomeArticolo()+" [Autore]: "+art.getCreatore().getName());
 						}
 					}
 				else {
@@ -424,23 +424,33 @@ public class UserView {
 	}
 	
 	private void creaOfferta() {
-		System.out.println(SEPARATORE);
 		stampaCategorieFoglie();
 		Categoria cat = leggiCategoria("Seleziona la categoria da cui scelgiere un articolo: ");
-		for(Articolo art : categoryController.articoli) {
-			if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
-				System.out.println(art.getNomeArticolo());
+		System.out.println(SEPARATORE);
+		if(cat!=null) {
+			for(Articolo art : categoryController.articoli) {
+				if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
+					System.out.println(art.getNomeArticolo());
+				}
 			}
-		}
-		Articolo artA = leggiArticolo("Inserire un articolo che desideri: ");
-		for(Articolo art : categoryController.articoli) {
-			if(art.getCategoriaArticolo()==cat&&art.getCreatore()==currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
-				System.out.println(art.getNomeArticolo());
+			Articolo artA = leggiArticolo("\nInserire un articolo che desideri: ");
+			for(Articolo art : categoryController.articoli) {
+				if(art.getCategoriaArticolo()==cat&&art.getCreatore()==currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
+					System.out.println(art.getNomeArticolo());
+				}
 			}
+			Articolo artB = leggiArticolo("\nInserire l'articolo da barattare: ");
+			
+			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
+			if(artA!=null&&artB!=null) {
+				appointmentController.creaOfferta(scadenza, artA, artB);
+				System.out.println("\nOperazione completata con successo");
+			}
+			else System.out.println("\nOperazione annullata");
+			
 		}
-		Articolo artB = leggiArticolo("Inserire l'articolo da barattare: ");
-		
-		long scadenza = InputDati.leggiInteroConMinimo("Inserire la scadenza dell'offerta: ", 1);
-		appointmentController.creaOfferta(scadenza, artA, artB);		
+		else System.out.println("\nOperazione annullata");
+				
 	}
 }
+
