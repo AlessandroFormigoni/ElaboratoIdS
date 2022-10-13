@@ -90,6 +90,10 @@ public class AppointmentController {
 		return offerte;
 	}
 	
+	public Offerta getOffertaFromID(int id) {
+		return offerteList.stream().filter(off -> off.getId()==id).findAny().get();
+	}
+	
 	public List<Offerta> getOfferteList(){
 		return this.offerteList;
 	}
