@@ -5,6 +5,7 @@ import java.util.*;
 public class Offerta {
 	Calendar scadenza;
 	Articolo[] coppiaArticoli = new Articolo[2];
+	private ConfAppointment appuntamento;
 	private static int globalNum = 0;
 	private int id;
 	
@@ -63,5 +64,9 @@ public class Offerta {
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setAppointment(ConfAppointment app) {
+		this.appuntamento = app;
 	}
 }

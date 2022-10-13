@@ -59,10 +59,13 @@ public class AppointmentController {
         this.offerteList.add(nuova);
 	}
 	
-	public void accettaOfferta(int idOfferta, String nomeUtente, boolean accettato) {
+	public void accettaOfferta(int idOfferta, String nomeUtente, ConfAppointment appuntamento, boolean accettato) {
 		for (Offerta off : offerteList) {
 			if(off.getId()==idOfferta && off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {
-				if(accettato) off.accettaOfferta();
+				if(accettato) {
+					off.accettaOfferta();
+					off.setAppointment(appuntamento);
+				}
 				else off.rifiutaOfferta();
 			}
 			else
@@ -97,4 +100,5 @@ public class AppointmentController {
 	public List<Offerta> getOfferteList(){
 		return this.offerteList;
 	}
+	
 }
