@@ -81,6 +81,15 @@ public class AppointmentController {
 		}
 	}
 	
+	public List<Offerta> getOfferteDaNome(String nomeUtente) {
+		List<Offerta> offerte = new ArrayList<>();
+		for(Offerta off : offerteList) {
+			if(off.getCreatoreArticolo(0).getName().equals(nomeUtente) || off.getCreatoreArticolo(1).getName().equals(nomeUtente))
+				offerte.add(off);
+		}
+		return offerte;
+	}
+	
 	public List<Offerta> getOfferteList(){
 		return this.offerteList;
 	}
