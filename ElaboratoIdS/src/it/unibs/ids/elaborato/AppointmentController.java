@@ -60,8 +60,9 @@ public class AppointmentController {
 	}
 	
 	public void accettaOfferta(int idOfferta, String nomeUtente, ConfAppointment appuntamento, boolean accettato) {
-		for (Offerta off : offerteList) {
-			if(off.getId()==idOfferta && off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {
+		Calendar callTime = Calendar.getInstance();
+		Offerta off = getOffertaFromID(idOfferta);
+			if(off.getCreatoreArticolo(1).getName().equals(nomeUtente) && callTime.before(off.getScadenza())) {
 				if(accettato) {
 					off.accettaOfferta();
 					off.setAppointment(appuntamento);
@@ -70,18 +71,26 @@ public class AppointmentController {
 			}
 			else
 				System.out.println("Errore");
+	}
+	
+	public void proponiNuovoAppuntamento(int idOfferta, String nomeUtente, ConfAppointment appuntamento) {
+		Calendar callTime = Calendar.getInstance();
+		Offerta off = getOffertaFromID(idOfferta);
+		if(callTime.before(off.getScadenza())) {
+			off.setAppointment(appuntamento);
 		}
 	}
 	
-	public void accettaAppuntamento(int idOfferta, String nomeUtente, Calendar commandTime, boolean accettato) {
-		for (Offerta off : offerteList) {
-			if((off.getId()==idOfferta && (off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente))) {		
-				if(commandTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
-				else if(commandTime.after(off.scadenza) || !accettato) off.rifiutaOfferta();
+	public void accettaAppuntamento(int idOfferta, String nomeUtente, boolean accettato) {
+		Calendar callTime = Calendar.getInstance();
+		Offerta off = getOffertaFromID(idOfferta);
+			if((off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {		
+				if(callTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
+				else if(callTime.after(off.scadenza) || !accettato) off.rifiutaOfferta();
 			}
 			else
 				System.out.println("Errore");
-		}
+		
 	}
 	
 	public List<Offerta> getOfferteDaNome(String nomeUtente) {
