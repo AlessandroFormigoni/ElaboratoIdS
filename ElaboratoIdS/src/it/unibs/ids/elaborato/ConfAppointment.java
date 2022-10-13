@@ -15,12 +15,16 @@ public class ConfAppointment {
 	private List<String> giorni;
 	private List<Float[]> intervalliOrari;
 	private int scadenza;
+	private static int globalId;
+	private int id;
 	
 	ConfAppointment(String piazza){
 		this.piazza = piazza;
 		this.luoghi = new ArrayList<>();
 		this.giorni = new ArrayList<>();
 		this.intervalliOrari = new ArrayList<>();
+		this.id = globalId;
+		globalId++;
 		
 	}
 	
@@ -89,6 +93,10 @@ public class ConfAppointment {
 		if(!luoghi.contains(luogo))luoghi.add(luogo);
 		
 		
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 	
 
