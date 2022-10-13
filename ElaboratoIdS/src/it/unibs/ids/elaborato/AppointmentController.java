@@ -55,7 +55,30 @@ public class AppointmentController {
 	        currentTime.setTimeInMillis(init);
         }
         Offerta nuova = new Offerta(currentTime, artA, artB);
-        this.offerteList.add(nuova);	
+        nuova.accoppiaOfferta();
+        this.offerteList.add(nuova);
+	}
+	
+	public void accettaOfferta(String nomeOfferta, String nomeUtente, boolean accettato) {
+		for (Offerta off : offerteList) {
+			if(off.coppiaArticoli[1].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {
+				if(accettato) off.accettaOfferta();
+				else off.rifiutaOfferta();
+			}
+			else
+				System.out.println("Errore");
+		}
+	}
+	
+	public void accettaAppuntamento(String nomeOfferta, String nomeUtente, Calendar commandTime, boolean accettato) {
+		for (Offerta off : offerteList) {
+			if((off.coppiaArticoli[0].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || (off.coppiaArticoli[1].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(1).getName().equals(nomeUtente))) {		
+				if(commandTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
+				else if(commandTime.after(off.scadenza) || !accettato) off.rifiutaOfferta();
+			}
+			else
+				System.out.println("Errore");
+		}
 	}
 	
 	public List<Offerta> getOfferteList(){

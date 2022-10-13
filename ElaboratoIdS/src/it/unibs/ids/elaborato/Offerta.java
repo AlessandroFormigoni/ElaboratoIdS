@@ -52,4 +52,8 @@ public class Offerta {
 	public Calendar getScadenza() {
 		return this.scadenza;
 	}
+	
+	public Utente getCreatoreArticolo(int index) {
+		return this.coppiaArticoli[index].getCreatore();
+	}
 }
