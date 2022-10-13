@@ -6,6 +6,10 @@ public class Offerta {
 	Calendar scadenza;
 	Articolo[] coppiaArticoli = new Articolo[2];
 	private ConfAppointment appuntamento;
+	public ConfAppointment getAppuntamento() {
+		return appuntamento;
+	}
+
 	private static int globalNum = 0;
 	private int id;
 	

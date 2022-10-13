@@ -1,18 +1,21 @@
 package it.unibs.ids.elaborato;
 
+import java.util.ArrayList;
+
 import it.unibs.fp.mylib.InputDati;
+import it.unibs.fp.mylib.MyMenu;
 
 public class UserView {
 	
 	private static final String INSERISCI_IL_NUMERO = "Inserisci il numero: ";
 	private static final String EXIT = "Uscendo...";
-	private static final String SEPARATORE = "-------------------------";
+	static final String SEPARATORE = "-------------------------";
 	private final static String MESSAGGIO_DI_BENVENUTO = "Benvenuti alla applicazione del barattolo v0.0.2, inserite le vostre credenziali per inizare";
 	private UserController userController;
-	private CategoryController categoryController;
+	CategoryController categoryController;
 	private AppointmentController appointmentController;
 	private AppointmentView appointmentView;
-	private Utente currentUser;
+	Utente currentUser;
 	
 	public UserView(UserController controller, CategoryController categoryController, AppointmentController appointmentController) {
 		this.userController = controller;
@@ -84,7 +87,7 @@ public class UserView {
 					appointmentView.makeAppointment(appointmentController);
 					break;
 				case 5:
-					visualizzaOfferteAperteFoglia();
+					appointmentView.visualizzaOfferteAperteFoglia(this);
 					break;
 				case 6:
 					stay = false;
@@ -112,7 +115,8 @@ public class UserView {
 			System.out.println("5. Visuallizza Offerte della Categoria Foglia specificata");
 			System.out.println("6. Ritira un'Offerta");
 			System.out.println("7. Fai una proposta di scambio");
-			System.out.println("8. Esegui logout");
+			System.out.println("8. Gestione offerte Attive");
+			System.out.println("9. Esegui logout");
 			int choice = InputDati.leggiIntero("\nInserisci numero: ");
 			switch(choice) {
 				case 1:
@@ -125,10 +129,10 @@ public class UserView {
 					pubblicaArticolo();
 					break;
 				case 4:
-					visualizzaOfferte();
+					visualizzaOfferte(appointmentController);
 					break;
 				case 5:
-					visualizzaOfferteAperteFoglia();
+					appointmentView.visualizzaOfferteAperteFoglia(this);
 					break;
 				case 6:
 					ritiraOfferta();
@@ -137,6 +141,9 @@ public class UserView {
 					creaOfferta();
 					break;
 				case 8:
+					offerteAttive();
+					break;
+				case 9:
 					logoutView();
 					stay = false;
 					break;
@@ -279,7 +286,7 @@ public class UserView {
 		}while(stay);
 	}
 	
-	private void stampaCategorieFoglie() {
+	void stampaCategorieFoglie() {
 		System.out.println(SEPARATORE);
 		for(Categoria c : categoryController.getCategorie()) {
 			if(!c.hasSottoCategorie())System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
@@ -303,46 +310,9 @@ public class UserView {
 		}
 	}
 	
-	private void visualizzaOfferte() {
-		System.out.println(SEPARATORE);
-		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
-			for(Articolo art : categoryController.offerteAttive(currentUser)) {
-			System.out.println("[Nome]: "+art.getNomeArticolo()+", [stato dell'offerta]: "+art.getStatoOfferta());
-			}
-		}
-		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
-	}
-	
-	private void visualizzaOfferteAperteFoglia() {
-		stampaCategorieFoglie();
-		boolean tryAgain;
-		do {
-			tryAgain=false;
-			Categoria foglia = leggiCategoria("Inserire Categoria di cui si vuole esplorare gli articoli: ");
-			if(foglia!=null) {
-				System.out.println();
-				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {
-					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria()+"\n");
-					for(Articolo art : categoryController.articoli) {
-						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA))
-							System.out.println("[Ariticolo]: "+art.getNomeArticolo()+" [Autore]: "+art.getCreatore().getName());
-						}
-					}
-				else {
-					System.out.println("La Categoria inserita non è valida!");
-					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
-					else tryAgain=false;
-					}
-			}
-		}while(tryAgain);
-	}
-	
-	
-	
-	
 	private void ritiraOfferta() {
 		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
-			visualizzaOfferte();
+			visualizzaOfferte(appointmentController);
 			Articolo articolo = leggiArticolo("Inserire l'Articolo da ritirare: ");
 			if(articolo!=null){
 				categoryController.ritiraOfferta(articolo);
@@ -371,7 +341,7 @@ public class UserView {
 		}
 	}
 	
-	private Categoria leggiCategoria(String messaggio) {
+	Categoria leggiCategoria(String messaggio) {
 		boolean tryAgain;
 		Categoria cat = null;
 		do {
@@ -428,22 +398,25 @@ public class UserView {
 		Categoria cat = leggiCategoria("Seleziona la categoria da cui scelgiere un articolo: ");
 		System.out.println(SEPARATORE);
 		if(cat!=null) {
-			for(Articolo art : categoryController.articoli) {
-				if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
-					System.out.println(art.getNomeArticolo());
-				}
-			}
-			Articolo artA = leggiArticolo("\nInserire un articolo che desideri: ");
+			System.out.println("\nArticoli che puoi barattare ");
 			for(Articolo art : categoryController.articoli) {
 				if(art.getCategoriaArticolo()==cat&&art.getCreatore()==currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
 					System.out.println(art.getNomeArticolo());
 				}
 			}
-			Articolo artB = leggiArticolo("\nInserire l'articolo da barattare: ");
+			Articolo daBarattare = leggiArticolo("\nInserire l'articolo da barattare: ");
+			System.out.println("\nArticoli disponibili ");
+			for(Articolo art : categoryController.articoli) {
+				if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
+				
+					System.out.println(art.getNomeArticolo());
+				}
+			}
+			Articolo daRicevere = leggiArticolo("\nInserire un articolo che desideri: ");
 			
 			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
-			if(artA!=null&&artB!=null) {
-				appointmentController.creaOfferta(scadenza, artA, artB);
+			if(daBarattare!=null&&daRicevere!=null) {
+				appointmentController.creaOfferta(scadenza, daBarattare, daRicevere);
 				System.out.println("\nOperazione completata con successo");
 			}
 			else System.out.println("\nOperazione annullata");
@@ -452,5 +425,66 @@ public class UserView {
 		else System.out.println("\nOperazione annullata");
 				
 	}
+	
+	private void offerteAttive(){
+		for(Offerta offerta: appointmentController.getOfferteDaNome(currentUser.nome)) {
+			appointmentView.stampaOfferta(offerta);
+		}
+		int selected = InputDati.leggiInteroNonNegativo("Seleziona un'Offerta inserendo l'Id: ");
+		Offerta offertaSelezionata = appointmentController.getOffertaFromID(selected);
+		Articolo[] coppia = offertaSelezionata.coppiaArticoli;
+		
+		
+		if(coppia[1].getCreatore().nome.equals(currentUser.nome)&&coppia[1].getStatoOfferta()==StatiOfferta.SELEZIONATA) {
+			boolean risposta = InputDati.yesOrNo("Accetti l'offerta? ");
+			if(risposta){
+				System.out.println("Ora devi proporre un appuntamento");
+				System.out.println("Questi sono luoghi, date e orari disponibili");
+				appointmentView.viewAppointments(appointmentController);
+				String piazza = InputDati.leggiStringaNonVuota("Inserire una Piazza: ");
+				ConfAppointment appointment = appointmentController.getAppointment(piazza);
+				String luogo = InputDati.leggiStringaNonVuota("Inserire un luogo: ");
+				String giorno = InputDati.leggiStringaNonVuota("Inserire un giorno: ");
+				Float ora = (float) InputDati.leggiDouble("Inserire un orario");
+				Float[] fintoIntervallo = {ora, ora};
+				appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+			}
+		}
+		else if(coppia[0].getCreatore().nome.equals(currentUser.nome)||coppia[0].getStatoOfferta()==StatiOfferta.IN_SCAMBIO) {
+			ConfAppointment app = offertaSelezionata.getAppuntamento();
+			System.out.println("\nAppuntamento proposto");
+			System.out.println("[Piazza]: "+app.getPiazza());
+			System.out.println("[Luogo]: "+app.getLuoghi().get(0));
+			System.out.println("[Giorno]: "+app.getGiorni().get(0));
+			Float[] orario = app.getIntervalliOrari().get(0);
+			System.out.println("[Orario]: "+orario[0]);
+			boolean risposta = InputDati.yesOrNo("Accetti l'appuntamento? ");
+			if(!risposta) {
+				System.out.println("Ora devi proporre un appuntamento alternativo");
+				System.out.println("Questi sono luoghi, date e orari disponibili");
+				appointmentView.viewAppointments(appointmentController);
+				String piazza = InputDati.leggiStringaNonVuota("Inserire una Piazza: ");
+				ConfAppointment appointment = appointmentController.getAppointment(piazza);
+				String luogo = InputDati.leggiStringaNonVuota("Inserire un luogo: ");
+				String giorno = InputDati.leggiStringaNonVuota("Inserire un giorno: ");
+				Float ora = (float) InputDati.leggiDouble("Inserire un orario");
+				Float[] fintoIntervallo = {ora, ora};
+				ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
+				app=alternativa;
+			}
+			appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
+		}
+	}
+
+	void visualizzaOfferte(AppointmentController appointmentController) {
+		System.out.println(UserView.SEPARATORE);
+		if(!categoryController.offerteAttive(currentUser).isEmpty()) {
+			for(Articolo art : categoryController.offerteAttive(currentUser)) {
+			System.out.println("[Nome]: "+art.getNomeArticolo()+", [stato dell'offerta]: "+art.getStatoOfferta());
+			}
+		}
+		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
+	}
 }
+
 

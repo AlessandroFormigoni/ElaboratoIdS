@@ -23,6 +23,28 @@ public class AppointmentController {
 		}
 	}
 	
+	public ConfAppointment creaUnicoAppuntamento(String piazza, String luogo, String giorno, Float[] orario, int scadenza) {
+		try {
+		ConfAppointment appuntamento = new ConfAppointment(piazza);
+		
+		ArrayList<String> luoghi = new ArrayList<String>();
+		luoghi.add(luogo);
+		appuntamento.setLuoghi(luoghi);
+		ArrayList<String> giorni = new ArrayList<String>();
+		giorni.add(giorno);
+		appuntamento.setGiorni(giorni);
+		ArrayList<Float[]> intervalliOrari = new ArrayList<Float[]>();
+		intervalliOrari.add(orario);
+		appuntamento.setIntervalliOrari(intervalliOrari);
+		appointmentList.add(appuntamento);
+		appuntamento.setScadenza(scadenza);
+		return appuntamento;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public void addLuogo(String piazza, String luogo) {
 		getAppointment(piazza).addLuogo(luogo);
 	}
@@ -38,7 +60,8 @@ public class AppointmentController {
 	public void setScadenza(String piazza, int scadenza) {
 		getAppointment(piazza).setScadenza(scadenza);
 	}
-	private ConfAppointment getAppointment(String piazza) {
+	
+	public ConfAppointment getAppointment(String piazza) {
 		return this.appointmentList.stream().filter(a -> a.getPiazza().equals(piazza)).findFirst().get();
 	}
 	
@@ -79,14 +102,19 @@ public class AppointmentController {
 		if(callTime.before(off.getScadenza())) {
 			off.setAppointment(appuntamento);
 		}
+		else {
+			System.out.println("Offerta scaduta");
+			off.rifiutaOfferta();
+		}
 	}
 	
-	public void accettaAppuntamento(int idOfferta, String nomeUtente, boolean accettato) {
+	public void accettaAppuntamento(int idOfferta, String nomeUtente, boolean accettato, ConfAppointment appuntamento) {
 		Calendar callTime = Calendar.getInstance();
 		Offerta off = getOffertaFromID(idOfferta);
 			if((off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {		
 				if(callTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
-				else if(callTime.after(off.scadenza) || !accettato) off.rifiutaOfferta();
+				else if(callTime.before(off.scadenza) && !accettato) proponiNuovoAppuntamento(idOfferta, nomeUtente, appuntamento);
+				else off.rifiutaOfferta();
 			}
 			else
 				System.out.println("Errore");

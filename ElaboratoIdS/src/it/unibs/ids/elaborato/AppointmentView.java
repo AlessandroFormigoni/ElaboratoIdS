@@ -108,5 +108,36 @@ public class AppointmentView {
 		sb.append("]");
 		return sb.toString();
 	}
+
+	void stampaOfferta(Offerta offerta) {
+		Articolo[] coppia = offerta.coppiaArticoli;
+		System.out.println("[Id Offerta]: "+offerta.getId()+")");
+		System.out.println("[Articolo A]: "+coppia[0].getNomeArticolo()+" [Stato Offerta]: "+coppia[0].getStatoOfferta());
+		System.out.println("[Articolo B]: "+coppia[1].getNomeArticolo()+" [Stato Offerta]: "+coppia[1].getStatoOfferta());
+	}
+
+	void visualizzaOfferteAperteFoglia(UserView userView) {
+		userView.stampaCategorieFoglie();
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			Categoria foglia = userView.leggiCategoria("Inserire Categoria di cui si vuole esplorare gli articoli: ");
+			if(foglia!=null) {
+				System.out.println();
+				if(!foglia.hasSottoCategorie() && userView.categoryController.categoryHasArticoli(foglia)) {
+					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria()+"\n");
+					for(Articolo art : userView.categoryController.articoli) {
+						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA))
+							System.out.println("[Ariticolo]: "+art.getNomeArticolo()+" [Autore]: "+art.getCreatore().getName());
+						}
+					}
+				else {
+					System.out.println("La Categoria inserita non è valida!");
+					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+					else tryAgain=false;
+					}
+			}
+		}while(tryAgain);
+	}
 	
 }
