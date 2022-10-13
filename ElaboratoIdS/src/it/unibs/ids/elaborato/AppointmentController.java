@@ -59,9 +59,9 @@ public class AppointmentController {
         this.offerteList.add(nuova);
 	}
 	
-	public void accettaOfferta(String nomeOfferta, String nomeUtente, boolean accettato) {
+	public void accettaOfferta(int idOfferta, String nomeUtente, boolean accettato) {
 		for (Offerta off : offerteList) {
-			if(off.coppiaArticoli[1].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {
+			if(off.getId()==idOfferta && off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {
 				if(accettato) off.accettaOfferta();
 				else off.rifiutaOfferta();
 			}
@@ -70,9 +70,9 @@ public class AppointmentController {
 		}
 	}
 	
-	public void accettaAppuntamento(String nomeOfferta, String nomeUtente, Calendar commandTime, boolean accettato) {
+	public void accettaAppuntamento(int idOfferta, String nomeUtente, Calendar commandTime, boolean accettato) {
 		for (Offerta off : offerteList) {
-			if((off.coppiaArticoli[0].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || (off.coppiaArticoli[1].getNomeArticolo().equals(nomeOfferta) && off.getCreatoreArticolo(1).getName().equals(nomeUtente))) {		
+			if((off.getId()==idOfferta && (off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente))) {		
 				if(commandTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
 				else if(commandTime.after(off.scadenza) || !accettato) off.rifiutaOfferta();
 			}

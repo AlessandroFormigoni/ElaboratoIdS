@@ -5,11 +5,15 @@ import java.util.*;
 public class Offerta {
 	Calendar scadenza;
 	Articolo[] coppiaArticoli = new Articolo[2];
+	private static int globalNum = 0;
+	private int id;
 	
 	public Offerta(Calendar scadenza, Articolo articoloA, Articolo articoloB) {
 		this.scadenza = scadenza;
 		this.coppiaArticoli[0] = articoloA;
 		this.coppiaArticoli[1] = articoloB;
+		this.id = globalNum;
+		globalNum++;
 	}
 	
 	public void accoppiaOfferta() {
@@ -55,5 +59,9 @@ public class Offerta {
 	
 	public Utente getCreatoreArticolo(int index) {
 		return this.coppiaArticoli[index].getCreatore();
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 }
