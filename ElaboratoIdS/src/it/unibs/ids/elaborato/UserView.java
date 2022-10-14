@@ -1,6 +1,7 @@
 package it.unibs.ids.elaborato;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.unibs.fp.mylib.InputDati;
 import it.unibs.fp.mylib.MyMenu;
@@ -341,7 +342,7 @@ public class UserView {
 		}
 	}
 	
-	Categoria leggiCategoria(String messaggio) {
+	 Categoria leggiCategoria(String messaggio) {
 		boolean tryAgain;
 		Categoria cat = null;
 		do {
@@ -417,6 +418,7 @@ public class UserView {
 			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
 			if(daBarattare!=null&&daRicevere!=null) {
 				appointmentController.creaOfferta(scadenza, daBarattare, daRicevere);
+				
 				System.out.println("\nOperazione completata con successo");
 			}
 			else System.out.println("\nOperazione annullata");
@@ -427,52 +429,59 @@ public class UserView {
 	}
 	
 	private void offerteAttive(){
-		for(Offerta offerta: appointmentController.getOfferteDaNome(currentUser.nome)) {
-			appointmentView.stampaOfferta(offerta);
-		}
-		int selected = InputDati.leggiInteroNonNegativo("Seleziona un'Offerta inserendo l'Id: ");
-		Offerta offertaSelezionata = appointmentController.getOffertaFromID(selected);
-		Articolo[] coppia = offertaSelezionata.coppiaArticoli;
 		
-		
-		if(coppia[1].getCreatore().nome.equals(currentUser.nome)&&coppia[1].getStatoOfferta()==StatiOfferta.SELEZIONATA) {
-			boolean risposta = InputDati.yesOrNo("Accetti l'offerta? ");
-			if(risposta){
-				System.out.println("Ora devi proporre un appuntamento");
-				System.out.println("Questi sono luoghi, date e orari disponibili");
-				appointmentView.viewAppointments(appointmentController);
-				String piazza = InputDati.leggiStringaNonVuota("Inserire una Piazza: ");
-				ConfAppointment appointment = appointmentController.getAppointment(piazza);
-				String luogo = InputDati.leggiStringaNonVuota("Inserire un luogo: ");
-				String giorno = InputDati.leggiStringaNonVuota("Inserire un giorno: ");
-				Float ora = (float) InputDati.leggiDouble("Inserire un orario");
-				Float[] fintoIntervallo = {ora, ora};
-				appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+		if(!appointmentController.getOfferteDaNome(currentUser.nome).isEmpty()){
+			for(Offerta offerta: appointmentController.getOfferteDaNome(currentUser.nome)) {
+				appointmentView.stampaOfferta(offerta);
+			}
+			int selected = InputDati.leggiInteroNonNegativo("Seleziona un'Offerta inserendo l'Id: ");
+			Offerta offertaSelezionata = appointmentController.getOffertaFromID(selected);
+			Articolo[] coppia = offertaSelezionata.coppiaArticoli;
+			
+			
+			if(coppia[1].getCreatore().nome.equals(currentUser.nome)&&coppia[1].getStatoOfferta()==StatiOfferta.SELEZIONATA) {
+				boolean risposta = InputDati.yesOrNo("Accetti l'offerta? ");
+				if(risposta){
+					System.out.println("Ora devi proporre un appuntamento");
+					System.out.println("Questi sono luoghi, date e orari disponibili");
+					appointmentView.viewAppointments(appointmentController);
+					String piazza = leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
+					ConfAppointment appointment = appointmentController.getAppointment(piazza);
+					String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+					String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+					Float ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+					Float[] fintoIntervallo = {ora, ora};
+					appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+				}
+			}
+			else if(appointmentController.checkUpadate(offertaSelezionata, currentUser.getName())&&coppia[0].getStatoOfferta()!=StatiOfferta.CHIUSA) {
+				ConfAppointment app = offertaSelezionata.getAppuntamento();
+				System.out.println("\nAppuntamento proposto");
+				System.out.println("[Piazza]: "+app.getPiazza());
+				System.out.println("[Luogo]: "+app.getLuoghi().get(0));
+				System.out.println("[Giorno]: "+app.getGiorni().get(0));
+				Float[] orario = app.getIntervalliOrari().get(0);
+				System.out.println("[Orario]: "+orario[0]);
+				System.out.println("[Scadenza]: "+app.getScadenza());
+				boolean risposta = InputDati.yesOrNo("Accetti l'appuntamento? ");
+				if(!risposta) {
+					System.out.println("Ora devi proporre un appuntamento alternativo");
+					System.out.println("Questi sono luoghi, date e orari disponibili");
+					appointmentView.viewAppointments(appointmentController);
+					String piazza = leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
+					ConfAppointment appointment = appointmentController.getAppointment(piazza);
+					String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+					String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+					Float ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+					Float[] fintoIntervallo = {ora, ora};
+					ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
+					app=alternativa;
+				}
+				appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
 			}
 		}
-		else if(coppia[0].getCreatore().nome.equals(currentUser.nome)||coppia[0].getStatoOfferta()==StatiOfferta.IN_SCAMBIO) {
-			ConfAppointment app = offertaSelezionata.getAppuntamento();
-			System.out.println("\nAppuntamento proposto");
-			System.out.println("[Piazza]: "+app.getPiazza());
-			System.out.println("[Luogo]: "+app.getLuoghi().get(0));
-			System.out.println("[Giorno]: "+app.getGiorni().get(0));
-			Float[] orario = app.getIntervalliOrari().get(0);
-			System.out.println("[Orario]: "+orario[0]);
-			boolean risposta = InputDati.yesOrNo("Accetti l'appuntamento? ");
-			if(!risposta) {
-				System.out.println("Ora devi proporre un appuntamento alternativo");
-				System.out.println("Questi sono luoghi, date e orari disponibili");
-				appointmentView.viewAppointments(appointmentController);
-				String piazza = InputDati.leggiStringaNonVuota("Inserire una Piazza: ");
-				ConfAppointment appointment = appointmentController.getAppointment(piazza);
-				String luogo = InputDati.leggiStringaNonVuota("Inserire un luogo: ");
-				String giorno = InputDati.leggiStringaNonVuota("Inserire un giorno: ");
-				Float ora = (float) InputDati.leggiDouble("Inserire un orario");
-				Float[] fintoIntervallo = {ora, ora};
-				ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
-				app=alternativa;
-			}
-			appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
+		else {
+			System.out.println("Non ci sono Offerte attive.");
 		}
 	}
 
@@ -484,6 +493,22 @@ public class UserView {
 			}
 		}
 		else System.out.println("Non hai ancora pubblicato alcuna Offerta!");
+	}
+	
+	private String leggiStringaConVerifica(String messaggio, List<String> daControllare) {
+		boolean tryAgain;
+		do {
+			tryAgain = false;
+			String input = InputDati.leggiStringaNonVuota(messaggio);
+			if(daControllare.contains(input)) return input;
+			else {
+				System.out.println("Errore di inserimento");
+				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+				else tryAgain=false;
+			}
+			
+		}while(tryAgain);
+		return null;
 	}
 }
 

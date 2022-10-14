@@ -6,10 +6,6 @@ public class Offerta {
 	Calendar scadenza;
 	Articolo[] coppiaArticoli = new Articolo[2];
 	private ConfAppointment appuntamento;
-	public ConfAppointment getAppuntamento() {
-		return appuntamento;
-	}
-
 	private static int globalNum = 0;
 	private int id;
 	
@@ -72,5 +68,10 @@ public class Offerta {
 	
 	public void setAppointment(ConfAppointment app) {
 		this.appuntamento = app;
+		this.appuntamento.setScadenza((int)this.scadenza.getTimeInMillis());
+	}
+	
+	public ConfAppointment getAppuntamento() {
+		return appuntamento;
 	}
 }

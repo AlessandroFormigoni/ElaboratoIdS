@@ -5,10 +5,12 @@ public class AppointmentController {
 	public static final long MILLISEC_GIORNO = 86400000;
 	private List<ConfAppointment> appointmentList;
 	private List<Offerta> offerteList;
+	private HashMap<Offerta, String> offerteUpdate;
 	
 	public AppointmentController() {
 		this.appointmentList = new ArrayList<>();
 		this.offerteList = new ArrayList<>();
+		this.offerteUpdate = new HashMap<>();
 	}
 	
 	public void creaAppuntamento(String piazza, List<String> luoghi, List<String> giorni, List<Float[]> intervalliOrari) {
@@ -36,7 +38,6 @@ public class AppointmentController {
 		ArrayList<Float[]> intervalliOrari = new ArrayList<Float[]>();
 		intervalliOrari.add(orario);
 		appuntamento.setIntervalliOrari(intervalliOrari);
-		appointmentList.add(appuntamento);
 		appuntamento.setScadenza(scadenza);
 		return appuntamento;
 		} catch(Exception e) {
@@ -80,11 +81,13 @@ public class AppointmentController {
         Offerta nuova = new Offerta(currentTime, artA, artB);
         nuova.accoppiaOfferta();
         this.offerteList.add(nuova);
+        this.offerteUpdate.put(nuova, artA.getCreatore().getName());
 	}
 	
 	public void accettaOfferta(int idOfferta, String nomeUtente, ConfAppointment appuntamento, boolean accettato) {
 		Calendar callTime = Calendar.getInstance();
 		Offerta off = getOffertaFromID(idOfferta);
+		offerteUpdate.replace(off, nomeUtente);
 			if(off.getCreatoreArticolo(1).getName().equals(nomeUtente) && callTime.before(off.getScadenza())) {
 				if(accettato) {
 					off.accettaOfferta();
@@ -99,6 +102,7 @@ public class AppointmentController {
 	public void proponiNuovoAppuntamento(int idOfferta, String nomeUtente, ConfAppointment appuntamento) {
 		Calendar callTime = Calendar.getInstance();
 		Offerta off = getOffertaFromID(idOfferta);
+		offerteUpdate.replace(off, nomeUtente);
 		if(callTime.before(off.getScadenza())) {
 			off.setAppointment(appuntamento);
 		}
@@ -111,6 +115,7 @@ public class AppointmentController {
 	public void accettaAppuntamento(int idOfferta, String nomeUtente, boolean accettato, ConfAppointment appuntamento) {
 		Calendar callTime = Calendar.getInstance();
 		Offerta off = getOffertaFromID(idOfferta);
+		offerteUpdate.replace(off, nomeUtente);
 			if((off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {		
 				if(callTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
 				else if(callTime.before(off.scadenza) && !accettato) proponiNuovoAppuntamento(idOfferta, nomeUtente, appuntamento);
@@ -138,4 +143,16 @@ public class AppointmentController {
 		return this.offerteList;
 	}
 	
+	public boolean checkUpadate(Offerta offerta, String nomeUser){
+		 if(!offerteUpdate.get(offerta).equals(nomeUser)) return true;
+		 else return false;
+	}
+	
+	public List<String> getListaPiazze(){
+		ArrayList<String> piazzeList = new ArrayList<>();
+		for(ConfAppointment ca : appointmentList) {
+			piazzeList.add(ca.getPiazza());
+		}
+		return piazzeList;
+	}
 }
