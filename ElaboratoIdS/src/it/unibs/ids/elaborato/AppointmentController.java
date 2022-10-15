@@ -155,4 +155,11 @@ public class AppointmentController {
 		}
 		return piazzeList;
 	}
+	
+	public boolean controllaOra(float ora, List<Float[]> intervalliOrari) {
+		for(Float[] intervallo:intervalliOrari) {
+			if(intervallo[0]<=ora&&ora<intervallo[1]) return true;
+		}
+		return false;
+	}
 }

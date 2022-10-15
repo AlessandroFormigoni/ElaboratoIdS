@@ -403,6 +403,9 @@ public class UserView {
 			for(Articolo art : categoryController.articoli) {
 				if(art.getCategoriaArticolo()==cat&&art.getCreatore()==currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
 					System.out.println(art.getNomeArticolo());
+					for(Campo c : art.getCampiArticolo()) {
+						System.out.println("["+c.getNome()+"]: "+c.getDescrizione());
+					}
 				}
 			}
 			Articolo daBarattare = leggiArticolo("\nInserire l'articolo da barattare: ");
@@ -411,6 +414,9 @@ public class UserView {
 				if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
 				
 					System.out.println(art.getNomeArticolo());
+					for(Campo c : art.getCampiArticolo()) {
+						System.out.println("["+c.getNome()+"]: "+c.getDescrizione());
+					}
 				}
 			}
 			Articolo daRicevere = leggiArticolo("\nInserire un articolo che desideri: ");
@@ -446,16 +452,35 @@ public class UserView {
 					System.out.println("Questi sono luoghi, date e orari disponibili");
 					appointmentView.viewAppointments(appointmentController);
 					String piazza = leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
-					ConfAppointment appointment = appointmentController.getAppointment(piazza);
-					String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
-					String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
-					Float ora = (float) InputDati.leggiDouble("Inserire un orario: ");
-					Float[] fintoIntervallo = {ora, ora};
-					appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+					if(piazza!=null) {
+						ConfAppointment appointment = appointmentController.getAppointment(piazza);
+						String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+						String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+						Float ora;
+						boolean tryAgain;
+						
+						do{
+							ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
+							else {
+								ora=null;
+								System.out.println("L'orario inserito non è valido!");
+								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+								else tryAgain=false;
+							}
+						}while(tryAgain);
+						if(luogo!=null&&giorno!=null&&ora!=null) {
+							Float[] fintoIntervallo = {ora, ora};
+							appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+						}
+						else System.out.println("Operazione annullata");
+					}
+					else System.out.println("Operazione annullata");
 				}
 			}
 			else if(appointmentController.checkUpadate(offertaSelezionata, currentUser.getName())&&coppia[0].getStatoOfferta()!=StatiOfferta.CHIUSA) {
 				ConfAppointment app = offertaSelezionata.getAppuntamento();
+				boolean ok =true;
 				System.out.println("\nAppuntamento proposto");
 				System.out.println("[Piazza]: "+app.getPiazza());
 				System.out.println("[Luogo]: "+app.getLuoghi().get(0));
@@ -469,15 +494,36 @@ public class UserView {
 					System.out.println("Questi sono luoghi, date e orari disponibili");
 					appointmentView.viewAppointments(appointmentController);
 					String piazza = leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
-					ConfAppointment appointment = appointmentController.getAppointment(piazza);
-					String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
-					String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
-					Float ora = (float) InputDati.leggiDouble("Inserire un orario: ");
-					Float[] fintoIntervallo = {ora, ora};
-					ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
-					app=alternativa;
+					if(piazza!=null) {
+						ConfAppointment appointment = appointmentController.getAppointment(piazza);
+						String luogo = leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+						String giorno = leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+						Float ora;
+						boolean tryAgain;
+						
+						do{
+							ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
+							else {
+								ora=null;
+								System.out.println("L'orario inserito non è valido!");
+								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+								else tryAgain=false;
+							}
+						}while(tryAgain);
+						if(piazza!=null&&luogo!=null&&giorno!=null&&ora!=null) {
+							Float[] fintoIntervallo = {ora, ora};
+							ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
+							app=alternativa;
+							ok=true;
+						}
+						else ok=false;
+					}
+					else ok = false;
+					
 				}
-				appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
+				if(ok)appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
+				else System.out.println("Operazione annullata");
 			}
 		}
 		else {
