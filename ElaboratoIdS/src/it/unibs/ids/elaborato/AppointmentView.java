@@ -32,7 +32,7 @@ public class AppointmentView {
 			System.out.println("Luoghi: " + a.getLuoghi());
 			System.out.println("Giorni: " + a.getGiorni());
 			System.out.println("Orari: " + stampaOrari(a));
-			System.out.println("Scadenza: " + a.getScadenza());
+			//System.out.println("Scadenza: " + a.getScadenza());
 		});
 		System.out.println(SEPARATORE);
 	}
@@ -115,29 +115,14 @@ public class AppointmentView {
 		System.out.println("[Articolo A]: "+coppia[0].getNomeArticolo()+" [Stato Offerta]: "+coppia[0].getStatoOfferta());
 		System.out.println("[Articolo B]: "+coppia[1].getNomeArticolo()+" [Stato Offerta]: "+coppia[1].getStatoOfferta());
 	}
-
-	void visualizzaOfferteAperteFoglia(UserView userView) {
-		userView.stampaCategorieFoglie();
-		boolean tryAgain;
-		do {
-			tryAgain=false;
-			Categoria foglia = userView.leggiCategoria("Inserire Categoria di cui si vuole esplorare gli articoli: ");
-			if(foglia!=null) {
-				System.out.println();
-				if(!foglia.hasSottoCategorie() && userView.categoryController.categoryHasArticoli(foglia)) {
-					System.out.println("Ecco tutte le Offerte della Categoria "+foglia.getNomeCategoria()+"\n");
-					for(Articolo art : userView.categoryController.articoli) {
-						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()) && art.getStatoOfferta().equals(StatiOfferta.APERTA))
-							System.out.println("[Ariticolo]: "+art.getNomeArticolo()+" [Autore]: "+art.getCreatore().getName());
-						}
-					}
-				else {
-					System.out.println("La Categoria inserita non è valida!");
-					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
-					else tryAgain=false;
-					}
-			}
-		}while(tryAgain);
+	
+	void stampaAppuntamento(ConfAppointment app) {
+		System.out.println("[Piazza]: "+app.getPiazza());
+		System.out.println("[Luogo]: "+app.getLuoghi().get(0));
+		System.out.println("[Giorno]: "+app.getGiorni().get(0));
+		Float[] orario = app.getIntervalliOrari().get(0);
+		System.out.println("[Orario]: "+orario[0]);
+		System.out.println("[Scadenza]: "+app.getScadenza());
 	}
 	
 }

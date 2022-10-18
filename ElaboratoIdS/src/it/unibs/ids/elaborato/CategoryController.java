@@ -116,7 +116,7 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 		if(daRitirare.getStatoOfferta()!=StatiOfferta.RITIRATA) daRitirare.ritiraOfferta();
 	}
 	
-	public List<Articolo> offerteAttive(Utente creatore){
+	public List<Articolo> getOfferteUtente(Utente creatore){
 		List<Articolo> offerte = new ArrayList<>();
 		for(Articolo art : articoli) {
 			if(art.getCreatore().equals(creatore)) offerte.add(art);
