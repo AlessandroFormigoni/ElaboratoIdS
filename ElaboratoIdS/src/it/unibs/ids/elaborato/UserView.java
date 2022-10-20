@@ -1,6 +1,7 @@
 package it.unibs.ids.elaborato;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import it.unibs.fp.mylib.InputDati;
 
@@ -361,7 +362,7 @@ public class UserView {
 			cat = categoryController.getCategoria(InputDati.leggiStringaNonVuota(messaggio));
 			if(categoryController.getCategorie().contains(cat)) tryAgain=false;
 			else {
-				System.out.println("La Categoria inserita non è valida!");
+				System.out.println("La Categoria inserita non ï¿½ valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -377,7 +378,7 @@ public class UserView {
 			campo = articolo.getCampoFromNome(InputDati.leggiStringaNonVuota("Inserire Campo: "));
 			if(articolo.getCampiArticolo().contains(campo)) tryAgain = false;
 			else {
-				System.out.println("La Categoria inserita non è valida!");
+				System.out.println("La Categoria inserita non ï¿½ valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -396,7 +397,7 @@ public class UserView {
 				else errore = true;
 			 }
 			if(errore) {
-				System.out.println("L'Articolo inserito non è valido!");
+				System.out.println("L'Articolo inserito non ï¿½ valido!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -430,7 +431,7 @@ public class UserView {
 					}
 				}
 			}
-			Articolo daRicevere = leggiArticolo("\nInserire un articolo che desideri: ", categoryController.articoli.stream().filter(art->art.getCreatore()!=currentUser).toList() );
+			Articolo daRicevere = leggiArticolo("\nInserire un articolo che desideri: ", categoryController.articoli.stream().filter(art->art.getCreatore()!=currentUser).collect(Collectors.toList()) );
 			
 			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
 			if(daBarattare!=null&&daRicevere!=null) {
@@ -475,7 +476,7 @@ public class UserView {
 							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
 							else {
 								ora=null;
-								System.out.println("L'orario inserito non è valido!");
+								System.out.println("L'orario inserito non ï¿½ valido!");
 								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 								else tryAgain=false;
 							}
@@ -512,7 +513,7 @@ public class UserView {
 							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
 							else {
 								ora=null;
-								System.out.println("L'orario inserito non è valido!");
+								System.out.println("L'orario inserito non ï¿½ valido!");
 								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 								else tryAgain=false;
 							}
@@ -584,7 +585,7 @@ public class UserView {
 						}
 					}
 				else {
-					System.out.println("La Categoria inserita non è valida!");
+					System.out.println("La Categoria inserita non ï¿½ valida!");
 					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 					else tryAgain=false;
 					}
@@ -603,8 +604,8 @@ public class UserView {
 				}
 			}
 			Offerta off = appointmentController.getOffertaFromID(InputDati.leggiInteroNonNegativo("Inserire l'ID dell'offerta di cui desideri visualizzare l'ultima risposta: "));
-			if(appointmentController.checkUpadate(off, currentUser.getName())) System.out.println("\nQuesta è l'ultima proposta di appuntamento che hai ricevuto");
-			else System.out.println("\nQuesta è l'ultima proposta di appuntamento che hai inviato");
+			if(appointmentController.checkUpadate(off, currentUser.getName())) System.out.println("\nQuesta ï¿½ l'ultima proposta di appuntamento che hai ricevuto");
+			else System.out.println("\nQuesta ï¿½ l'ultima proposta di appuntamento che hai inviato");
 			appointmentView.stampaAppuntamento(off.getAppuntamento());
 		}
 		else System.out.println("Non hai articoli in scambio");

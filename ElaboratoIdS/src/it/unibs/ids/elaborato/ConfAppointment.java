@@ -88,7 +88,6 @@ public class ConfAppointment {
 		if(!luoghi.contains(luogo))luoghi.add(luogo);
 		
 		
-	}
-	
+	}	
 
 }

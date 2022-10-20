@@ -162,4 +162,25 @@ public class AppointmentController {
 		}
 		return false;
 	}
+	
+	public void setAppointments(List<ConfAppointment> appointments) {
+		this.appointmentList = appointments;
+	}
+
+	public List<ConfAppointment> getAppointmentList() {
+		return appointmentList;
+	}
+
+	public void setOfferteList(List<Offerta> offerteList) {
+		this.offerteList = offerteList;
+	}
+	
+	public void setUpdate(Offerta key, String value) {
+		this.offerteUpdate.put(key, value);
+	}
+
+	public HashMap<Offerta, String> getOfferteUpdate() {
+		return offerteUpdate;
+	}
+	
 }
