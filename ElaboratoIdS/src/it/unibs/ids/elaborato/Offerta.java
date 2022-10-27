@@ -69,7 +69,7 @@ public class Offerta {
 	public void setAppointment(ConfAppointment app) {
 		this.appuntamento = app;
 		Calendar currentTime= Calendar.getInstance();
-		Double giorniRimasti = (double)(scadenza.getTimeInMillis() - currentTime.getTimeInMillis())/AppointmentController.MILLISEC_GIORNO;
+		Double giorniRimasti = (double)(scadenza.getTimeInMillis() - currentTime.getTimeInMillis())/AppointmentBaseController.MILLISEC_GIORNO;
 		this.appuntamento.setScadenza((int)Math.round(giorniRimasti));
 	}
 	

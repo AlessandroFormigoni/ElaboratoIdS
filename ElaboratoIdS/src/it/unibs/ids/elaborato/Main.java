@@ -7,15 +7,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		UserController c = new UserController(UserRegistryReader.getReadUserReg());
+		UserBaseController c = new UserBaseController(UserRegistryReader.getReadUserReg());
 		CategoryController d = new CategoryController();
-		AppointmentController e = new AppointmentController();
+		AppointmentBaseController e = new AppointmentBaseController();
 		d.setCategorie(CategoryReader.readCategories());
 		d.articoli = new ArrayList<Articolo>(ArticoloReader.readArticoli(d, c));
 		e.setAppointments(AppuntamentiReader.readAppuntamenti());
 		e.setOfferteList(OfferteReader.readOfferte(d, e));
-		UserView uw = new UserView(c, d, e);
-		uw.viewStartupScreen();
+		UserController uw = new UserController(c, d, e);
+		UserView.viewStartupScreen();
 		uw.accessMenu();
 		WriteUserRegistry.write(c.getListaUtenti());
 		WriteCategorie.write(d.getCategorie());

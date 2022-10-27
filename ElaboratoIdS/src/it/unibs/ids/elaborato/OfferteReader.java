@@ -39,7 +39,7 @@ public class OfferteReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static void extractOfferte(CategoryController cc, AppointmentController ac) {
+	public static void extractOfferte(CategoryController cc, AppointmentBaseController ac) {
 		try {
 			while(xmlr.hasNext()) {
 				switch(xmlr.getEventType()) {
@@ -80,7 +80,7 @@ public class OfferteReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static List<Offerta> readOfferte(CategoryController cc, AppointmentController ac) {
+	public static List<Offerta> readOfferte(CategoryController cc, AppointmentBaseController ac) {
 		initializeReader();
 		extractOfferte(cc, ac);
 		return offerte;

@@ -17,7 +17,7 @@ public class ViewUtility {
 			cat = categoryController.getCategoria(InputDati.leggiStringaNonVuota(messaggio));
 			if(categoryController.getCategorie().contains(cat)) tryAgain=false;
 			else {
-				System.out.println("La Categoria inserita non è valida!");
+				System.out.println("La Categoria inserita non ï¿½ valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -33,7 +33,7 @@ public class ViewUtility {
 			campo = articolo.getCampoFromNome(InputDati.leggiStringaNonVuota("Inserire Campo: "));
 			if(articolo.getCampiArticolo().contains(campo)) tryAgain = false;
 			else {
-				System.out.println("La Categoria inserita non è valida!");
+				System.out.println("La Categoria inserita non ï¿½ valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -52,7 +52,7 @@ public class ViewUtility {
 				else errore = true;
 			 }
 			if(errore) {
-				System.out.println("L'Articolo inserito non è valido!");
+				System.out.println("L'Articolo inserito non ï¿½ valido!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}

@@ -38,7 +38,7 @@ public class ArticoloReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static void extractArticoli(CategoryController cc, UserController uc) {
+	public static void extractArticoli(CategoryController cc, UserBaseController uc) {
 		try {
 			while(xmlr.hasNext()) {
 				switch(xmlr.getEventType()) {
@@ -75,7 +75,7 @@ public class ArticoloReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static List<Articolo> readArticoli(CategoryController cc, UserController uc) {
+	public static List<Articolo> readArticoli(CategoryController cc, UserBaseController uc) {
 		initializeReader();
 		extractArticoli(cc, uc);
 		return articoli;

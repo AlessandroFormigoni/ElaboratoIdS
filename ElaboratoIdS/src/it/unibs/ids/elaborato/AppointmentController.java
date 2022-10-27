@@ -1,186 +1,290 @@
 package it.unibs.ids.elaborato;
+
 import java.util.*;
+import java.util.stream.Collectors;
+
+import it.unibs.fp.mylib.InputDati;
 
 public class AppointmentController {
-	public static final long MILLISEC_GIORNO = 86400000;
-	private List<ConfAppointment> appointmentList;
-	private List<Offerta> offerteList;
-	private HashMap<Offerta, String> offerteUpdate;
 	
-	public AppointmentController() {
-		this.appointmentList = new ArrayList<>();
-		this.offerteList = new ArrayList<>();
-		this.offerteUpdate = new HashMap<>();
+	private static final float timeUpperLimit = 23.599999999999f;
+	private static final float minutesUpperLimit = 0.599999999999f;
+	
+	public void makeAppointment(AppointmentBaseController ac) {
+		UserView.printSeparatore();
+		String piazza = InputDati.leggiStringaNonVuota("Inserisci il nome della piazza: ");
+		String luoghi = InputDati.leggiStringaNonVuota("Inserisci i luoghi, separati da una virgola: ");
+		String giorni;
+		do {
+		giorni = InputDati.leggiStringaNonVuota("Inserisci i giorni, separati da una virgola: ");
+		} while(!containsGiorno(giorni));
+		String orari;
+		do {
+		orari = InputDati.leggiStringaNonVuota("Inserisci gli intervalli orari, nel formato xx.yy-xx.yy, separati da una virgola: ");
+		} while(isValidTime(creaOrari(orari)));
+		ac.creaAppuntamento(piazza, stringSeparator(luoghi), stringSeparator(giorni), creaOrari(orari));
 	}
 	
-	public void creaAppuntamento(String piazza, List<String> luoghi, List<String> giorni, List<Float[]> intervalliOrari) {
-		try {
-		ConfAppointment appuntamento = new ConfAppointment(piazza);
-		appuntamento.setLuoghi(luoghi);
-		appuntamento.setGiorni(giorni);
-		appuntamento.setIntervalliOrari(intervalliOrari);
-		appointmentList.add(appuntamento);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public ConfAppointment creaUnicoAppuntamento(String piazza, String luogo, String giorno, Float[] orario, int scadenza) {
-		try {
-		ConfAppointment appuntamento = new ConfAppointment(piazza);
-		
-		ArrayList<String> luoghi = new ArrayList<String>();
-		luoghi.add(luogo);
-		appuntamento.setLuoghi(luoghi);
-		ArrayList<String> giorni = new ArrayList<String>();
-		giorni.add(giorno);
-		appuntamento.setGiorni(giorni);
-		ArrayList<Float[]> intervalliOrari = new ArrayList<Float[]>();
-		intervalliOrari.add(orario);
-		appuntamento.setIntervalliOrari(intervalliOrari);
-		appuntamento.setScadenza(scadenza);
-		return appuntamento;
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public void addLuogo(String piazza, String luogo) {
-		getAppointment(piazza).addLuogo(luogo);
-	}
-	
-	public void addGiorno(String piazza, String luogo) {
-		getAppointment(piazza).addGiorno(luogo);
-	}
-	
-	public void addIntervallo(String piazza, float inizio, float fine) {
-		getAppointment(piazza).addIntervallo(Float.valueOf(inizio), Float.valueOf(fine));
-	}
-	
-	public void setScadenza(String piazza, int scadenza) {
-		getAppointment(piazza).setScadenza(scadenza);
-	}
-	
-	public ConfAppointment getAppointment(String piazza) {
-		return this.appointmentList.stream().filter(a -> a.getPiazza().equals(piazza)).findFirst().get();
-	}
-	
-	public List<ConfAppointment> getAppuntamenti() {
-		return this.appointmentList;
-	}
-	
-	public void creaOfferta(long scadenza, Articolo artA, Articolo artB) {
-		Calendar currentTime = Calendar.getInstance();
-        
-        for(int i=1; i<=scadenza; i++) {
-	        long init = currentTime.getTimeInMillis();
-	        init += MILLISEC_GIORNO;
-	        currentTime.setTimeInMillis(init);
-        }
-        Offerta nuova = new Offerta(currentTime, artA, artB);
-        nuova.accoppiaOfferta();
-        this.offerteList.add(nuova);
-        this.offerteUpdate.put(nuova, artA.getCreatore().getName());
-	}
-	
-	public void accettaOfferta(int idOfferta, String nomeUtente, ConfAppointment appuntamento, boolean accettato) {
-		Calendar callTime = Calendar.getInstance();
-		Offerta off = getOffertaFromID(idOfferta);
-		offerteUpdate.replace(off, nomeUtente);
-			if(off.getCreatoreArticolo(1).getName().equals(nomeUtente) && callTime.before(off.getScadenza())) {
-				if(accettato) {
-					off.accettaOfferta();
-					off.setAppointment(appuntamento);
-				}
-				else off.rifiutaOfferta();
-			}
-			else
-				System.out.println("Errore");
-	}
-	
-	public void proponiNuovoAppuntamento(int idOfferta, String nomeUtente, ConfAppointment appuntamento) {
-		Calendar callTime = Calendar.getInstance();
-		Offerta off = getOffertaFromID(idOfferta);
-		offerteUpdate.replace(off, nomeUtente);
-		if(callTime.before(off.getScadenza())) {
-			off.setAppointment(appuntamento);
-		}
-		else {
-			System.out.println("Offerta scaduta");
-			off.rifiutaOfferta();
-		}
-	}
-	
-	public void accettaAppuntamento(int idOfferta, String nomeUtente, boolean accettato, ConfAppointment appuntamento) {
-		Calendar callTime = Calendar.getInstance();
-		Offerta off = getOffertaFromID(idOfferta);
-		offerteUpdate.replace(off, nomeUtente);
-			if((off.getCreatoreArticolo(0).getName().equals(nomeUtente)) || off.getCreatoreArticolo(1).getName().equals(nomeUtente)) {		
-				if(callTime.before(off.scadenza) && accettato) off.accettaAppuntamento();
-				else if(callTime.before(off.scadenza) && !accettato) proponiNuovoAppuntamento(idOfferta, nomeUtente, appuntamento);
-				else off.rifiutaOfferta();
-			}
-			else
-				System.out.println("Errore");
+	private List<String> stringSeparator(String input) {
+		return Arrays.asList(input.split(","));
 		
 	}
 	
-	public List<Offerta> getOfferteDaNome(String nomeUtente) {
-		List<Offerta> offerte = new ArrayList<>();
-		for(Offerta off : offerteList) {
-			if(off.getCreatoreArticolo(0).getName().equals(nomeUtente) || off.getCreatoreArticolo(1).getName().equals(nomeUtente))
-				offerte.add(off);
+	private List<Float> floatSeparator(String input) {
+		List<Float> list = new ArrayList<>();
+		stringSeparator(input).stream().forEach(f -> list.add(Float.parseFloat(f)));
+		return list;
+	}
+	
+	public List<Float[]> creaOrari(String input){
+		List<Float[]> orari = new ArrayList<>();
+		List<String> list = new ArrayList<>();
+		
+		for(String s : stringSeparator(input)) {
+			list = Arrays.asList(s.split("-"));
+				float inizio = Float.valueOf(list.get(0));
+				float fine = Float.valueOf(list.get(1));
+				Float[] intervallo = {inizio, fine};
+				orari.add(intervallo);
 		}
-		return offerte;
+		
+		
+		return orari;
 	}
 	
-	public Offerta getOffertaFromID(int id) {
-		return offerteList.stream().filter(off -> off.getId()==id).findAny().get();
-	}
-	
-	public List<Offerta> getOfferteList(){
-		return this.offerteList;
-	}
-	
-	public boolean checkUpadate(Offerta offerta, String nomeUser){
-		 if(!offerteUpdate.get(offerta).equals(nomeUser)) return true;
-		 else return false;
-	}
-	
-	public List<String> getListaPiazze(){
-		ArrayList<String> piazzeList = new ArrayList<>();
-		for(ConfAppointment ca : appointmentList) {
-			piazzeList.add(ca.getPiazza());
+	private boolean containsGiorno(String input) {
+		try {
+			for(String giorno : stringSeparator(input.toUpperCase()))
+				GiornoSettimana.valueOf(giorno);
+			return true;
+		} catch(IllegalArgumentException e) {
+			AppointmentView.stampaGiornoInesistente();
 		}
-		return piazzeList;
+		return false;
+		
 	}
 	
-	public boolean controllaOra(float ora, List<Float[]> intervalliOrari) {
-		for(Float[] intervallo:intervalliOrari) {
-			if(intervallo[0]<=ora&&ora<intervallo[1]) return true;
+	private boolean isValidTime(String input) {
+		for(Float orario : floatSeparator(input)) {
+			if(orario.floatValue()<0.0f || orario.floatValue()>timeUpperLimit || (orario.floatValue() % 1)>minutesUpperLimit) {
+				AppointmentView.stampaOrarioDigitatoInvalido();
+				return true;
+			}
 		}
 		return false;
 	}
+	private boolean isValidTime(List<Float[]> input) {
+		for(Float[] f : input) {
+			for(int i=0;i<f.length;i++) {
+				if(f[i].floatValue()<0.0f || f[i].floatValue()>timeUpperLimit || (f[i].floatValue() % 1)>minutesUpperLimit) {
+					AppointmentView.stampaOrarioDigitatoInvalido();
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	void pubblicaArticolo(Utente currentUser, CategoryController categoryController) {
+		for(Categoria c  : categoryController.getCategorie()) {
+			if(!c.hasSottoCategorie()) System.out.println(CategoriaStringheFormattate.percorso(c));
+		}
+		Categoria catSelezionata = ViewUtility.leggiCategoria(categoryController, "Inserire Categoria a cui appartiene l'Articolo: ");
+		if(catSelezionata!=null) {
+			String nomeArticolo = InputDati.leggiStringaNonVuota("Inserisci il nome del tuo Articolo: ");
+			Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
+			System.out.println(CategoriaStringheFormattate.tuttiCampi(nuovoArt.getCategoriaArticolo()));
+			ViewUtility.modificaCampi(nuovoArt);
+		}
+		else {
+			UserView.printCancelOp();
+		}
+	}
+
+	void visualizzaOfferte(Utente currentUser, CategoryController categoryController) {
+		UserView.printSeparatore();
+		if(!categoryController.getOfferteUtente(currentUser).isEmpty()) {
+			for(Articolo art : categoryController.getOfferteUtente(currentUser)) {
+			System.out.println("[Nome]: "+art.getNomeArticolo()+", [Categoria]: "+art.getCategoriaArticolo().getNomeCategoria()+", [Stato dell'Offerta]: "+art.getStatoOfferta());
+			}
+		}
+		else AppointmentView.stampaOffertaNonPubblicata();
+	}
+
+	void ritiraOfferta(Utente currentUser, CategoryController categoryController) {
+		if(!categoryController.getOfferteUtente(currentUser).isEmpty()) {
+			visualizzaOfferte(currentUser, categoryController);
+			Articolo articolo = ViewUtility.leggiArticolo("Inserire l'Articolo da ritirare: ", categoryController.getOfferteUtente(currentUser));
+			if(articolo!=null){
+				categoryController.ritiraOfferta(articolo);
+				AppointmentView.stampaOffertaRitirata();
+			}
+			else UserView.printCancelOp();
+			
+		}
+		else AppointmentView.stampaOffertaNonPubblicata();
+	}
+
+	void creaOfferta(AppointmentBaseController appointmentController, Utente currentUser, CategoryController categoryController) {
+		ViewUtility.stampaCategorieFoglie(categoryController);
+		Categoria cat = ViewUtility.leggiCategoria(categoryController, "Seleziona la categoria da cui scelgiere un articolo: ");
+		UserView.printSeparatore();
+		if(cat!=null) {
+			AppointmentView.stampaArticoliBarattabili(currentUser, categoryController, cat);
+			Articolo daBarattare = ViewUtility.leggiArticolo("\nInserire l'articolo da barattare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getCategoriaArticolo().equals(cat)).collect(Collectors.toList()));
+			AppointmentView.stampaArticoliDisponibili(currentUser, categoryController, cat);
+			Articolo daRicevere = ViewUtility.leggiArticolo("\nInserire un articolo che desideri: ", categoryController.articoli.stream().filter(art->art.getCreatore()!=currentUser&&art.getCategoriaArticolo().equals(cat)).collect(Collectors.toList()));
+			
+			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
+			if(daBarattare!=null&&daRicevere!=null) {
+				appointmentController.creaOfferta(scadenza, daBarattare, daRicevere);
+				
+				UserView.printOpCompletedNewline();
+			}
+			else UserView.printCancelOpNewline();
+			
+		}
+		else UserView.printCancelOpNewline();
+				
+	}
+
+	void offerteAttive(Utente currentUser, CategoryController categoryController, AppointmentBaseController appointmentController){
+		
+		if(!appointmentController.getOfferteDaNome(currentUser.nome).isEmpty()){
+			for(Offerta offerta: appointmentController.getOfferteDaNome(currentUser.nome)) {
+				AppointmentView.stampaOfferta(offerta);
+			}
+			int selected = InputDati.leggiInteroNonNegativo("Seleziona un'Offerta inserendo l'Id: ");
+			Offerta offertaSelezionata = appointmentController.getOffertaFromID(selected);
+			Articolo[] coppia = offertaSelezionata.coppiaArticoli;
+			
+			
+			if(coppia[1].getCreatore().nome.equals(currentUser.nome)&&coppia[1].getStatoOfferta()==StatiOfferta.SELEZIONATA) {
+				boolean risposta = InputDati.yesOrNo("Accetti l'offerta? ");
+				if(risposta){
+					AppointmentView.stampaMessaggioPropAppuntamento("");
+					AppointmentView.viewAppointments(appointmentController);
+					String piazza = ViewUtility.leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
+					if(piazza!=null) {
+						ConfAppointment appointment = appointmentController.getAppointment(piazza);
+						String luogo = ViewUtility.leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+						String giorno = ViewUtility.leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+						Float ora;
+						boolean tryAgain;
+						
+						do{
+							ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
+							else {
+								ora=null;
+								AppointmentView.stampaOrarioNonValido();
+								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+								else tryAgain=false;
+							}
+						}while(tryAgain);
+						if(luogo!=null&&giorno!=null&&ora!=null) {
+							Float[] fintoIntervallo = {ora, ora};
+							appointmentController.accettaOfferta(selected, currentUser.getName(), appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza()), risposta);
+						}
+						else UserView.printCancelOp();
+					}
+					else UserView.printCancelOp();
+				}
+			}
+			else if(appointmentController.checkUpadate(offertaSelezionata, currentUser.getName())&&coppia[0].getStatoOfferta()!=StatiOfferta.CHIUSA) {
+				ConfAppointment app = offertaSelezionata.getAppuntamento();
+				boolean ok =true;
+				AppointmentView.stampaAppuntamentoProposto();
+				AppointmentView.stampaAppuntamento(app);
+				boolean risposta = InputDati.yesOrNo("Accetti l'appuntamento? ");
+				if(!risposta) {
+					AppointmentView.stampaMessaggioPropAppuntamento("alternativo");
+					AppointmentView.viewAppointments(appointmentController);
+					String piazza = ViewUtility.leggiStringaConVerifica("Inserire una Piazza: ", appointmentController.getListaPiazze());
+					if(piazza!=null) {
+						ConfAppointment appointment = appointmentController.getAppointment(piazza);
+						String luogo = ViewUtility.leggiStringaConVerifica("Inserire un luogo: ", appointment.getLuoghi());
+						String giorno = ViewUtility.leggiStringaConVerifica("Inserire un giorno: ", appointment.getGiorni());
+						Float ora;
+						boolean tryAgain;
+						
+						do{
+							ora = (float) InputDati.leggiDouble("Inserire un orario: ");
+							if(appointmentController.controllaOra(ora, appointment.getIntervalliOrari())) tryAgain=false;
+							else {
+								ora=null;
+								AppointmentView.stampaOrarioNonValido();
+								if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+								else tryAgain=false;
+							}
+						}while(tryAgain);
+						if(piazza!=null&&luogo!=null&&giorno!=null&&ora!=null) {
+							Float[] fintoIntervallo = {ora, ora};
+							ConfAppointment alternativa = appointmentController.creaUnicoAppuntamento(piazza, luogo, giorno, fintoIntervallo, appointment.getScadenza());
+							app=alternativa;
+							ok=true;
+						}
+						else ok=false;
+					}
+					else ok = false;
+					
+				}
+				if(ok)appointmentController.accettaAppuntamento(selected, currentUser.nome, risposta, app);
+				else UserView.printCancelOp();
+			}
+		}
+		else {
+			AppointmentView.stampaNoOfferteAttive();
+		}
+	}
+
+	void visualizzaOfferteFoglia(Utente currentUser, CategoryController categoryController) {
+		ViewUtility.stampaCategorieFoglie(categoryController);
+		boolean tryAgain;
+		do {
+			tryAgain=false;
+			Categoria foglia = ViewUtility.leggiCategoria(categoryController, "Inserire Categoria di cui si vuole esplorare gli articoli: ");
+			if(foglia!=null) {
+				System.out.println();
+				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {
+					AppointmentView.stampaMessaggioListaCat(foglia);
+					for(Articolo art : categoryController.articoli) {
+						if(art.getCategoriaArticolo().getNomeCategoria().equals(foglia.getNomeCategoria()))
+							if(currentUser.isAuthorized()) {
+								if(art.getStatoOfferta()==StatiOfferta.APERTA||art.getStatoOfferta()==StatiOfferta.IN_SCAMBIO||art.getStatoOfferta()==StatiOfferta.CHIUSA)
+									AppointmentView.stampaArticoliPubblici(art);
 	
-	public void setAppointments(List<ConfAppointment> appointments) {
-		this.appointmentList = appointments;
+							}
+							else if(art.getStatoOfferta()==StatiOfferta.APERTA)
+								AppointmentView.stampaArticoliAperti(art);
+						}
+					}
+				else {
+					AppointmentView.stampaCategoriaInvalida();
+					if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+					else tryAgain=false;
+					}
+			}
+		}while(tryAgain);
 	}
 
-	public List<ConfAppointment> getAppointmentList() {
-		return appointmentList;
-	}
-
-	public void setOfferteList(List<Offerta> offerteList) {
-		this.offerteList = offerteList;
-	}
-	
-	public void setUpdate(Offerta key, String value) {
-		this.offerteUpdate.put(key, value);
-	}
-
-	public HashMap<Offerta, String> getOfferteUpdate() {
-		return offerteUpdate;
+	void visualizzaUltimaRisposta(Utente currentUser, AppointmentBaseController appointmentController) {
+		UserView.printSeparatore();
+		if(appointmentController.getOfferteDaNome(currentUser.getName()).stream().anyMatch(off->off.coppiaArticoli[0].getStatoOfferta()==StatiOfferta.IN_SCAMBIO)) {
+			AppointmentView.stampaMessaggioArticoliInScambio();
+			for(Offerta offerta : appointmentController.getOfferteDaNome(currentUser.getName())) {
+				Articolo art = offerta.coppiaArticoli[0];
+				if(art.getStatoOfferta()==StatiOfferta.IN_SCAMBIO) {
+					AppointmentView.stampaOfferta(offerta);
+				}
+			}
+			Offerta off = appointmentController.getOffertaFromID(InputDati.leggiInteroNonNegativo("Inserire l'ID dell'offerta di cui desideri visualizzare l'ultima risposta: "));
+			if(appointmentController.checkUpadate(off, currentUser.getName())) AppointmentView.stampaMessaggioUltimaProposta("ricevuto");
+			else AppointmentView.stampaMessaggioUltimaProposta("inviato");
+			AppointmentView.stampaAppuntamento(off.getAppuntamento());
+		}
+		else AppointmentView.stampaMessaggioNoArticoliInScambio();
 	}
 	
 }
