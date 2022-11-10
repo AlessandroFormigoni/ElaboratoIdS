@@ -17,7 +17,7 @@ public class ViewUtility {
 			cat = categoryController.getCategoria(InputDati.leggiStringaNonVuota(messaggio));
 			if(categoryController.getCategorie().contains(cat)) tryAgain=false;
 			else {
-				System.out.println("La Categoria inserita non ï¿½ valida!");
+				System.out.println("La Categoria inserita non è valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -33,7 +33,7 @@ public class ViewUtility {
 			campo = articolo.getCampoFromNome(InputDati.leggiStringaNonVuota("Inserire Campo: "));
 			if(articolo.getCampiArticolo().contains(campo)) tryAgain = false;
 			else {
-				System.out.println("La Categoria inserita non ï¿½ valida!");
+				System.out.println("La Categoria inserita non è valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -52,7 +52,7 @@ public class ViewUtility {
 				else errore = true;
 			 }
 			if(errore) {
-				System.out.println("L'Articolo inserito non ï¿½ valido!");
+				System.out.println("L'Articolo inserito non è valido!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
@@ -125,6 +125,26 @@ public class ViewUtility {
 			System.out.println(UserView.SEPARATORE);
 	
 		}
+	}
+	
+	public static Offerta leggiOffertaFromId(String messaggio, List<Offerta> offerte) {
+		boolean tryAgain;
+		do {
+			tryAgain = false;
+			boolean errore = false;
+			int idOfferta = InputDati.leggiInteroNonNegativo(messaggio);
+			for(Offerta off : offerte) {
+				if(off.getId()==idOfferta) return off;
+				else errore = true;
+			 }
+			if(errore) {
+				System.out.println("L'id inserito non è valido!");
+				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
+				else tryAgain=false;
+			}
+			
+		}while(tryAgain);
+		return null;
 	}
 
 }
