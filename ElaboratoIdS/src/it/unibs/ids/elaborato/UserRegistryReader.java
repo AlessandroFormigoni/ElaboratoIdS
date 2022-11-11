@@ -41,7 +41,50 @@ public class UserRegistryReader {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
+	public static void initializeReader(String fileName) {
+		try {
+			xmlr = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(fileName));
+		} catch (Exception e) {e.printStackTrace();}
+	}
+	
 	public static void extractUsers() {
+		try {
+			while(xmlr.hasNext()) {
+				switch(xmlr.getEventType()) {
+				case XMLStreamConstants.START_DOCUMENT:
+					break;
+				case XMLStreamConstants.START_ELEMENT:
+					switch(xmlr.getLocalName()) {
+					case "utenti":
+						break;
+					case "configuratori":
+						break;
+					case "configuratore":
+						Configuratore conf = new Configuratore(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1));
+						if(Integer.parseInt(xmlr.getAttributeValue(2))!=0) conf.isFirstAccess = false;
+						utenti.add(conf);
+					case "fruitori":
+						break;
+					case "fruitore":
+						Fruitore fruit = new Fruitore(xmlr.getAttributeValue(0), xmlr.getAttributeValue(1));
+						if(Integer.parseInt(xmlr.getAttributeValue(2))!=0) fruit.isFirstAccess = false;
+						utenti.add(fruit);
+						break;
+					}
+					break;
+				 case XMLStreamConstants.END_ELEMENT:
+					 break;
+				 case XMLStreamConstants.COMMENT:
+					 break; 
+				 case XMLStreamConstants.CHARACTERS:
+					 break;
+				}
+				xmlr.next();
+			}
+		} catch (Exception e) {e.printStackTrace();}
+	}
+	
+	public static void extractUsers(XMLStreamReader xmlr) {
 		try {
 			while(xmlr.hasNext()) {
 				switch(xmlr.getEventType()) {
@@ -81,6 +124,11 @@ public class UserRegistryReader {
 	public static ArrayList<Utente> getReadUserReg() {
 		initializeReader();
 		extractUsers();
+		return utenti;
+	}
+	
+	public static ArrayList<Utente> getReadUserRegFromFileName(String fileName, XMLStreamReader xmlrd) {
+		extractUsers(xmlrd);
 		return utenti;
 	}
 }

@@ -127,7 +127,7 @@ public class UserController {
 					stay = false;
 					break;
 				default:
-					UserView.printIllegalCmd();;
+					UserView.printIllegalCmd();
 					break;
 			}
 		}while(stay);

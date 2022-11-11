@@ -110,7 +110,7 @@ public class AppointmentView {
 	
 	public static void stampaArticoliDisponibili(Utente currentUser, CategoryController categoryController, Categoria cat) {
 		System.out.println("\nArticoli disponibili ");
-		for(Articolo art : categoryController.articoli) {
+		for(Articolo art : categoryController.getArticoli()) {
 			if(art.getCategoriaArticolo()==cat&&art.getCreatore()!=currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
 			
 				System.out.println(art.getNomeArticolo());
@@ -123,7 +123,7 @@ public class AppointmentView {
 
 	public static void stampaArticoliBarattabili(Utente currentUser, CategoryController categoryController, Categoria cat) {
 		System.out.println("\nArticoli che puoi barattare ");
-		for(Articolo art : categoryController.articoli) {
+		for(Articolo art : categoryController.getArticoli()) {
 			if(art.getCategoriaArticolo()==cat&&art.getCreatore()==currentUser&&art.getStatoOfferta()==StatiOfferta.APERTA) {
 				System.out.println(art.getNomeArticolo());
 				for(Campo c : art.getCampiArticolo()) {

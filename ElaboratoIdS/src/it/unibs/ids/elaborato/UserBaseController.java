@@ -88,4 +88,8 @@ public class UserBaseController {
 		return this.listaUtenti;
 	}
 
+	public void setListaUtenti(List<Utente> listaUtenti) {
+		this.listaUtenti = listaUtenti;
+	}
+
 }

@@ -5,10 +5,11 @@ import java.util.*;
 
 public class CategoryController {
 private List<Categoria> listaCategorie;
-public ArrayList<Articolo> articoli = new ArrayList<>();
+private List<Articolo> articoli;
 	
 	public CategoryController() {
 		this.listaCategorie = new ArrayList<>();
+		this.articoli = new ArrayList<>();
 	}
 	
 	public void aggiungiCategoria(Categoria categoria) {
@@ -129,6 +130,14 @@ public ArrayList<Articolo> articoli = new ArrayList<>();
 			if(art.getCategoriaArticolo().equals(cat)) return true;
 		}
 		return false;
+	}
+
+	public List<Articolo> getArticoli() {
+		return articoli;
+	}
+
+	public void setArticoli(List<Articolo> articoli) {
+		this.articoli = articoli;
 	}
 
 }
