@@ -45,13 +45,10 @@ public class ViewUtility {
 		boolean tryAgain;
 		do {
 			tryAgain = false;
-			boolean errore = false;
 			String nomeArticolo = InputDati.leggiStringaNonVuota(messaggio);
-			for(Articolo art : articoli) {
-				if(art.getNomeArticolo().equals(nomeArticolo)) return art;
-				else errore = true;
-			 }
-			if(errore) {
+			if(articoli.stream().anyMatch(articolo->articolo.getNomeArticolo().equals(nomeArticolo))) return articoli.stream().filter(art->art.getNomeArticolo().equals(nomeArticolo)).toList().get(0);
+			else tryAgain = true;
+			if(tryAgain) {
 				System.out.println("L'Articolo inserito non è valido!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;

@@ -115,7 +115,7 @@ public class AppointmentController {
 	void ritiraOfferta(Utente currentUser, CategoryController categoryController) {
 		if(!categoryController.getOfferteUtente(currentUser).isEmpty()) {
 			visualizzaOfferte(currentUser, categoryController);
-			Articolo articolo = ViewUtility.leggiArticolo("Inserire l'Articolo da ritirare: ", categoryController.getOfferteUtente(currentUser));
+			Articolo articolo = ViewUtility.leggiArticolo("Inserire l'Articolo da ritirare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getStatoOfferta().equals(StatiOfferta.APERTA)).toList());
 			if(articolo!=null){
 				categoryController.ritiraOfferta(articolo);
 				AppointmentView.stampaOffertaRitirata();
@@ -132,9 +132,9 @@ public class AppointmentController {
 		UserView.printSeparatore();
 		if(cat!=null) {
 			AppointmentView.stampaArticoliBarattabili(currentUser, categoryController, cat);
-			Articolo daBarattare = ViewUtility.leggiArticolo("\nInserire l'articolo da barattare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getCategoriaArticolo().equals(cat)).collect(Collectors.toList()));
+			Articolo daBarattare = ViewUtility.leggiArticolo("\nInserire l'articolo da barattare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getCategoriaArticolo().equals(cat)&&art.getStatoOfferta().equals(StatiOfferta.APERTA)).collect(Collectors.toList()));
 			AppointmentView.stampaArticoliDisponibili(currentUser, categoryController, cat);
-			Articolo daRicevere = ViewUtility.leggiArticolo("\nInserire un articolo che desideri: ", categoryController.articoli.stream().filter(art->art.getCreatore()!=currentUser&&art.getCategoriaArticolo().equals(cat)).collect(Collectors.toList()));
+			Articolo daRicevere = ViewUtility.leggiArticolo("\nInserire un articolo che desideri: ", categoryController.articoli.stream().filter(art->art.getCreatore()!=currentUser&&art.getCategoriaArticolo().equals(cat)&&art.getStatoOfferta().equals(StatiOfferta.APERTA)).collect(Collectors.toList()));
 			
 			long scadenza = InputDati.leggiInteroConMinimo("\nInserire la scadenza dell'offerta: ", 1);
 			if(daBarattare!=null&&daRicevere!=null) {
