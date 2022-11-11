@@ -29,7 +29,7 @@ public class XMLFileImporter {
 			findFileReaderAndWrite(xmlr, cc, uc, ac, offerteUpdate, fileName);
 		}
 		} else {
-			System.out.println("Nessun file trovato nella cartella Imports");
+			System.out.println("Nessun file da leggere trovato nella cartella Imports");
 		}
 	}
 	
@@ -92,7 +92,7 @@ public class XMLFileImporter {
 			counter++;
 		}
 		} else {
-			System.out.println("Nessun file trovato nella cartella Imports");
+			System.out.println("Nessun file da eliminare trovato nella cartella Imports");
 		}
 		if(counter == (fileListLength)) System.out.println("File eliminati con successo");
 		else System.out.println("Errore: Non sono stati eliminati tutti i file");
