@@ -95,7 +95,8 @@ public class XMLFileImporter {
 			System.out.println("Nessun file da eliminare trovato nella cartella Imports");
 		}
 		if(counter == (fileListLength) && fileListLength!=0) System.out.println("File eliminati con successo");
-		else System.out.println("Errore: Non sono stati eliminati tutti i file");
+		else if(counter != (fileListLength)) System.out.println("Errore: Non sono stati eliminati tutti i file");
+		else System.out.println("Errore di cancellazione");
 	}
 	
 
