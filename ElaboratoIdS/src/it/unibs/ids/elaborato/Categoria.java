@@ -235,7 +235,6 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 	public TreeSet<Categoria> treeReconstructor(Map<Categoria, Set<Categoria>> mappa) {
 		TreeSet<Categoria> tree = new TreeSet<>();
 		mappa.keySet().stream().filter(r -> r.isRoot()).forEach(v -> {
-			//Categoria root = new Categoria("", "");
 			try {
 				tree.add((Categoria)v.clone());
 				

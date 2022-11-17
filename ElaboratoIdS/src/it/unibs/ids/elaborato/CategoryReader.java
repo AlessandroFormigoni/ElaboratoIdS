@@ -151,18 +151,22 @@ public class CategoryReader {
 	public static List<Categoria> readCategories() {
 		initializeReader();
 		extractCategories();
-		List<Categoria> tree = new ArrayList<>(reconstructedTree());
-		categorie.addAll(tree);
-		trimLeaves(tree);
+		if(categorie.size()>0) {
+			List<Categoria> tree = new ArrayList<>(reconstructedTree());
+			categorie.addAll(tree);
+			trimLeaves(tree);
+		}
 		return categorie;
 	}
 	
 	public static List<Categoria> readCategoriesFromFileName(String fileName, XMLStreamReader xmlrd) {
 		initializeReader(fileName);
 		extractCategories(xmlrd);
-		List<Categoria> tree = new ArrayList<>(reconstructedTree());
-		categorie.addAll(tree);
-		trimLeaves(tree);
+		if(categorie.size()>0) {
+			List<Categoria> tree = new ArrayList<>(reconstructedTree());
+			categorie.addAll(tree);
+			trimLeaves(tree);
+		}
 		return categorie;
 	}
 	
