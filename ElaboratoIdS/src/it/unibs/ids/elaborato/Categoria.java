@@ -143,14 +143,6 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 		if(trovaCampo(daRimuovere)!=null && daRimuovere.isModificabile()) campi.remove(daRimuovere);
 	}
 	
-	/*public boolean equals(Categoria daParagonare){
-		boolean stesso;
-		if(this.nomeCategoria.equals(daParagonare.nomeCategoria)&&this.descrizioneLibera.equals(daParagonare.descrizioneLibera)) stesso=true;
-		else stesso=false;
-		
-		return stesso;
-	}*/
-	
 	public int compareTo(Categoria daComparare) {
 		
 		if(this.nomeCategoria.compareTo(daComparare.nomeCategoria)>=0) return 1;
@@ -267,7 +259,7 @@ public class Categoria implements Comparable<Categoria>, Cloneable {
 				}
 				
 			} catch(Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		});
 		

@@ -115,7 +115,7 @@ public class AppointmentController {
 	void ritiraOfferta(Utente currentUser, CategoryController categoryController) {
 		if(!categoryController.getOfferteUtente(currentUser).isEmpty()) {
 			visualizzaOfferte(currentUser, categoryController);
-			Articolo articolo = ViewUtility.leggiArticolo("Inserire l'Articolo da ritirare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getStatoOfferta().equals(StatiOfferta.APERTA)).toList());
+			Articolo articolo = ViewUtility.leggiArticolo("Inserire l'Articolo da ritirare: ", categoryController.getOfferteUtente(currentUser).stream().filter(art->art.getStatoOfferta().equals(StatiOfferta.APERTA)).collect(Collectors.toList()));
 			if(articolo!=null){
 				categoryController.ritiraOfferta(articolo);
 				AppointmentView.stampaOffertaRitirata();
@@ -156,7 +156,7 @@ public class AppointmentController {
 				AppointmentView.stampaOfferta(offerta);
 			}
 			
-			List<Offerta> offerte = appointmentController.getOfferteList().stream().filter(off->off.getCreatoreArticolo(0).equals(currentUser)||off.getCreatoreArticolo(1).equals(currentUser)).toList();
+			List<Offerta> offerte = appointmentController.getOfferteList().stream().filter(off->off.getCreatoreArticolo(0).equals(currentUser)||off.getCreatoreArticolo(1).equals(currentUser)).collect(Collectors.toList());
 			Offerta offertaSelezionata = ViewUtility.leggiOffertaFromId("Seleziona un'Offerta inserendo l'Id: ", offerte);
 			
 			if(offertaSelezionata!=null) {
@@ -280,7 +280,7 @@ public class AppointmentController {
 					AppointmentView.stampaOfferta(offerta);
 				}
 			}
-			List<Offerta> offerte = appointmentController.getOfferteList().stream().filter(offerta->(offerta.getCreatoreArticolo(0).equals(currentUser)||offerta.getCreatoreArticolo(1).equals(currentUser))&&offerta.coppiaArticoli[0].getStatoOfferta().equals(StatiOfferta.IN_SCAMBIO)).toList();
+			List<Offerta> offerte = appointmentController.getOfferteList().stream().filter(offerta->(offerta.getCreatoreArticolo(0).equals(currentUser)||offerta.getCreatoreArticolo(1).equals(currentUser))&&offerta.coppiaArticoli[0].getStatoOfferta().equals(StatiOfferta.IN_SCAMBIO)).collect(Collectors.toList());
 			Offerta off = ViewUtility.leggiOffertaFromId("Inserire l'ID dell'offerta di cui desideri visualizzare l'ultima risposta: ", offerte);
 			if(off!=null) {
 				if(appointmentController.checkUpadate(off, currentUser.getName())) AppointmentView.stampaMessaggioUltimaProposta("ricevuto");
