@@ -168,7 +168,7 @@ public class UserController {
 			int choice = InputDati.leggiIntero(UserView.INSERISCI_IL_NUMERO);
 			switch(choice) {
 				case 1:
-					Categoria categoria = ViewUtility.leggiCategoria(categoryController, "Inserisci nome categoria: ");
+					Categoria categoria = ViewUtility.leggiCategoria(categoryController.getCategorie(), "Inserisci nome categoria: ");
 					if(categoria!=null) {
 						String nomeCategoria = categoria.getNomeCategoria();
 						String nomeCampo = InputDati.leggiStringaNonVuota("Inserisci nome campo: ");
@@ -181,8 +181,8 @@ public class UserController {
 					
 					break;
 				case 2:
-					Categoria radice = ViewUtility.leggiCategoria(categoryController, "Inserisci nome categoria radice: ");
-					Categoria cat = ViewUtility.leggiCategoria(categoryController, "Inserisci nome categoria madre: ");
+					Categoria radice = ViewUtility.leggiCategoria(categoryController.getCategorie(), "Inserisci nome categoria radice: ");
+					Categoria cat = ViewUtility.leggiCategoria(categoryController.getCategorie(), "Inserisci nome categoria madre: ");
 					if(radice!=null&&cat!=null) {
 						String nomeRadice = radice.getNomeCategoria();
 						String nomeCat = cat.getNomeCategoria();

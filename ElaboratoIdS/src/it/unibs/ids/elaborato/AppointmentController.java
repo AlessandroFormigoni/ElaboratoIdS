@@ -88,9 +88,9 @@ public class AppointmentController {
 
 	void pubblicaArticolo(Utente currentUser, CategoryController categoryController) {
 		for(Categoria c  : categoryController.getCategorie()) {
-			if(!c.hasSottoCategorie()) System.out.println(CategoriaStringheFormattate.percorso(c));
+			if(!c.hasSottoCategorie()&&!c.isRoot()) System.out.println(CategoriaStringheFormattate.percorso(c));
 		}
-		Categoria catSelezionata = ViewUtility.leggiCategoria(categoryController, "Inserire Categoria a cui appartiene l'Articolo: ");
+		Categoria catSelezionata = ViewUtility.leggiCategoria(categoryController.getCategorie().stream().filter(c->!c.hasSottoCategorie()&&!c.isRoot()).toList(), "Inserire Categoria a cui appartiene l'Articolo: ");
 		if(catSelezionata!=null) {
 			String nomeArticolo = InputDati.leggiStringaNonVuota("Inserisci il nome del tuo Articolo: ");
 			Articolo nuovoArt = categoryController.creaArticolo(nomeArticolo, catSelezionata, currentUser);
@@ -128,7 +128,7 @@ public class AppointmentController {
 
 	void creaOfferta(AppointmentBaseController appointmentController, Utente currentUser, CategoryController categoryController) {
 		ViewUtility.stampaCategorieFoglie(categoryController);
-		Categoria cat = ViewUtility.leggiCategoria(categoryController, "Seleziona la categoria da cui scelgiere un articolo: ");
+		Categoria cat = ViewUtility.leggiCategoria(categoryController.getCategorie().stream().filter(c->!c.hasSottoCategorie()&&!c.isRoot()).toList(), "Seleziona la categoria da cui scelgiere un articolo: ");
 		UserView.printSeparatore();
 		if(cat!=null) {
 			AppointmentView.stampaArticoliBarattabili(currentUser, categoryController, cat);
@@ -245,7 +245,7 @@ public class AppointmentController {
 		boolean tryAgain;
 		do {
 			tryAgain=false;
-			Categoria foglia = ViewUtility.leggiCategoria(categoryController, "Inserire Categoria di cui si vuole esplorare gli articoli: ");
+			Categoria foglia = ViewUtility.leggiCategoria(categoryController.getCategorie().stream().filter(c->!c.hasSottoCategorie()&&!c.isRoot()).toList(), "Inserire Categoria di cui si vuole esplorare gli articoli: ");
 			if(foglia!=null) {
 				System.out.println();
 				if(!foglia.hasSottoCategorie() && categoryController.categoryHasArticoli(foglia)) {

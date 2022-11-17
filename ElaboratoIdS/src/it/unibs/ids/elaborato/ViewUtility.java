@@ -10,20 +10,19 @@ public class ViewUtility {
 	static final String SEPARATORE = "-------------------------";
 
 	
-	public static Categoria leggiCategoria(CategoryController categoryController, String messaggio ) {
+	public static Categoria leggiCategoria(List<Categoria> categorie, String messaggio ) {
 		boolean tryAgain;
-		Categoria cat = null;
 		do {
 			tryAgain=false;
-			cat = categoryController.getCategoria(InputDati.leggiStringaNonVuota(messaggio));
-			if(categoryController.getCategorie().contains(cat)) tryAgain=false;
+			String nomeCategoria = InputDati.leggiStringaNonVuota(messaggio);
+			if(categorie.stream().anyMatch(c->c.getNomeCategoria().equals(nomeCategoria))) return categorie.stream().filter(c->c.getNomeCategoria().equals(nomeCategoria)).collect(Collectors.toList()).get(0);
 			else {
 				System.out.println("La Categoria inserita non è valida!");
 				if(InputDati.yesOrNo("Vuoi riprovare?")) tryAgain=true;
 				else tryAgain=false;
 			}
 		}while(tryAgain);
-		return cat;
+		return null;
 	}
 	
 	public static Campo leggiCampo(Articolo articolo) {
@@ -79,7 +78,7 @@ public class ViewUtility {
 	public static void stampaCategorieFoglie(CategoryController categoryController) {
 		System.out.println(SEPARATORE);
 		for(Categoria c : categoryController.getCategorie()) {
-			if(!c.hasSottoCategorie())System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
+			if(!c.hasSottoCategorie()&&!c.isRoot())System.out.println(CategoriaStringheFormattate.categoriaConDescr(c));
 		}
 		System.out.println();
 	}
